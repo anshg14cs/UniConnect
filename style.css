@@ -578,8 +578,6 @@ button {
 
     margin: auto;
 
-    padding-bottom: 120px;
-
 }
 
 
@@ -1380,7 +1378,7 @@ button {
 
     margin: 0 auto;
 
-    padding: 130px 0;
+    padding: 12px 0 100px;
 
     display: grid;
 
@@ -1431,7 +1429,7 @@ button {
 
     margin: 0 auto 90px;
 
-    padding: 90px 8%;
+    padding: 50px 8%;
 
     border-radius: 28px;
 
