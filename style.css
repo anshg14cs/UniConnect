@@ -580,6 +580,8 @@ button {
 
     margin: auto;
 
+    padding-bottom: 100px
+
 }
 
 
@@ -609,7 +611,7 @@ button {
 
 .feature-step {
 
-    min-height: 85vh;
+    min-height: 60vh;
 
     display: flex;
     flex-direction: column;
@@ -1371,57 +1373,6 @@ button {
 
 
 /* =====================================================
-   ABOUT
-===================================================== */
-
-.about-section {
-
-    width: min(88%, 1100px);
-
-    margin: 0 auto;
-
-    padding: 12px 0 100px;
-
-    display: grid;
-
-    grid-template-columns:
-        1.25fr
-        0.75fr;
-
-    gap: 80px;
-
-    align-items: end;
-
-}
-
-
-.about-section h2 {
-
-    margin: 15px 0 0;
-
-    font-size: clamp(38px, 4.4vw, 58px);
-
-    line-height: 1.08;
-
-    letter-spacing: -2px;
-
-}
-
-
-.about-copy {
-
-    margin: 0;
-
-    color: var(--text-soft);
-
-    font-size: 18px;
-
-    line-height: 1.7;
-
-}
-
-
-/* =====================================================
    FINAL CTA
 ===================================================== */
 
@@ -1431,7 +1382,7 @@ button {
 
     margin: 0 auto 90px;
 
-    padding: 50px 8%;
+    padding: 40px 8%;
 
     border-radius: 28px;
 
