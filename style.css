@@ -703,6 +703,8 @@ button {
 
     min-width: 0;
 
+    align-self: stretch;
+
 }
 
 
