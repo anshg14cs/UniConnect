@@ -1590,15 +1590,6 @@ button {
 
     }
 
-
-    .about-section {
-
-        grid-template-columns: 1fr;
-
-        gap: 30px;
-
-    }
-
 }
 
 
@@ -1744,15 +1735,6 @@ button {
     .feature-step > p:last-child {
 
         font-size: 16px;
-
-    }
-
-
-    .about-section {
-
-        width: 90%;
-
-        padding: 90px 0;
 
     }
 
