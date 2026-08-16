@@ -12,9 +12,9 @@
     <title>UniConnect</title>
 
     <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+>
 </head>
 
 
@@ -960,7 +960,7 @@
 
 
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 
