@@ -207,9 +207,7 @@ button {
 .hero {
 
     width: min(88%, 1200px);
-
-    min-height: calc(100vh - 78px);
-
+    
     margin: auto;
 
     display: grid;
@@ -535,8 +533,6 @@ button {
     max-width: 920px;
 
     margin: auto;
-
-    padding: 145px 7% 80px;
 
     text-align: center;
 
