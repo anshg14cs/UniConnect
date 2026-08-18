@@ -15,8 +15,8 @@ def create_app():
         email = ""
 
         if request.method == "POST":
-            name = request.form["name"]
-            email = request.form["email"]
+            name = request.form["name"].strip()
+            email = request.form["email"].strip()
             password = request.form["password"]
             confirm_password = request.form["confirm_password"]
 
@@ -25,6 +25,9 @@ def create_app():
 
             elif password != confirm_password:
                 error = "Passwords do not match!"
+
+            elif len(password) < 8:
+                error = "Password must be at least 8 characters long."
 
             else:
                 print("Registration data is valid")
