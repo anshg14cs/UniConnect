@@ -10,6 +10,10 @@
 
     <h1>Create your UniConnect account</h1>
 
+    {% if error %}
+    <p>{{ error }}</p>
+    {% endif %}
+
     <form
         action="{{ url_for('register') }}"
         method="post"
@@ -24,6 +28,7 @@
                 type="text"
                 id="name"
                 name="name"
+                value = "{{name}}"
             >
         </div>
 
@@ -37,6 +42,7 @@
                 type="email"
                 id="email"
                 name="email"
+                value = "{{email}}"
             >
         </div>
 

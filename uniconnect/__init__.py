@@ -10,16 +10,24 @@ def create_app():
 
     @app.route("/register" , methods=["GET", "POST"])
     def register():
+        error = None
+        name = ""
+        email = ""
+
         if request.method == "POST":
             name = request.form["name"]
             email = request.form["email"]
             password = request.form["password"]
             confirm_password = request.form["confirm_password"]
 
-            print(name)
-            print(email)
-            print(password)
-            print(confirm_password)
-        return render_template("register.html")
+            if not name or not email or not password or not confirm_password:
+                error = "All fields are required!"
+
+            elif password != confirm_password:
+                error = "Passwords do not match!"
+
+            else:
+                print("Registration data is valid")
+        return render_template("register.html", error = error, name=name, email = email)
 
     return app
