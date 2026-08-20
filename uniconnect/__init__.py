@@ -3,6 +3,15 @@ from flask import Flask, render_template, request
 
 def create_app():
     app = Flask(__name__)
+    app.config["DATABASE"] = os.path.join(
+    app.instance_path,
+    "uniconnect.sqlite"
+)
+
+    os.makedirs(app.instance_path, exist_ok=True)
+
+    from . import db
+    db.init_app(app)
 
     @app.route("/")
     def home():

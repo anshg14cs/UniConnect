@@ -11,4 +11,13 @@ def get_db():
 
         g.db.row_factory = sqlite3.Row
 
+def close_db(e=None):
+    db = g.pop("db", None)
+
+    if db is not None:
+        db.close()
+
     return g.db
+
+def init_app(app):
+    app.teardown_appcontext(close_db)
