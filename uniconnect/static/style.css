@@ -1734,3 +1734,67 @@ button {
     }
 
 }
+
+.university-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.university-dropdown {
+    position: relative;
+    width: 340px;
+    flex-shrink: 0;
+}
+
+.university-dropdown input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.university-options {
+    display: none;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: max-content;
+    min-width: 100%;
+    max-width: 500px;
+
+    max-height: 220px;
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    background: white;
+    border: 1px solid #ccc;
+
+    z-index: 1000;
+}
+
+.university-options.show {
+    display: block;
+}
+
+.university-option {
+    display: block;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 10px;
+
+    border: none;
+    background: white;
+
+    text-align: left;
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+.university-option:hover {
+    background: #f2f2f2;
+}

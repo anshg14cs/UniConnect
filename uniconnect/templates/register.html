@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | UniConnect</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+>
 </head>
 
 <body>
@@ -46,6 +51,41 @@
             >
         </div>
 
+<div class="university-field">
+    <label for="university-search">University:</label>
+
+    <div class="university-dropdown">
+        <input
+            type="text"
+            id="university-search"
+            placeholder="Search for your university"
+            autocomplete="off"
+        >
+
+        <input
+            type="hidden"
+            id="university"
+            name="university"
+        >
+
+        <div
+            id="university-options"
+            class="university-options"
+        >
+            {% for university in universities %}
+                <button
+                    type="button"
+                    class="university-option"
+                    data-value="{{ university }}"
+                >
+                    {{ university }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+      
+
 
         <div>
             <label for="password">
@@ -78,6 +118,52 @@
         </button>
 
     </form>
+
+<script>
+    const searchInput = document.getElementById("university-search");
+    const hiddenInput = document.getElementById("university");
+    const optionsContainer = document.getElementById("university-options");
+    const options = document.querySelectorAll(".university-option");
+
+    searchInput.addEventListener("focus", function () {
+        optionsContainer.classList.add("show");
+    });
+
+    searchInput.addEventListener("input", function () {
+        const searchValue = searchInput.value.toLowerCase();
+
+        hiddenInput.value = "";
+
+        options.forEach(function (option) {
+            const universityName = option.dataset.value.toLowerCase();
+
+            if (universityName.includes(searchValue)) {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        });
+
+        optionsContainer.classList.add("show");
+    });
+
+    options.forEach(function (option) {
+        option.addEventListener("click", function () {
+            const university = option.dataset.value;
+
+            searchInput.value = university;
+            hiddenInput.value = university;
+
+            optionsContainer.classList.remove("show");
+        });
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".university-dropdown")) {
+            optionsContainer.classList.remove("show");
+        }
+    });
+</script>
 
 </body>
 </html>

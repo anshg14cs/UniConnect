@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request
+from .universities import UK_UNIVERSITIES
 
 def create_app():
     app = Flask(__name__)
@@ -40,6 +41,6 @@ def create_app():
 
             else:
                 print("Registration data is valid")
-        return render_template("register.html", error = error, name=name, email = email)
+        return render_template("register.html", error = error, name=name, email = email, universities = UK_UNIVERSITIES)
 
     return app
