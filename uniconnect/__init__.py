@@ -23,14 +23,16 @@ def create_app():
         error = None
         name = ""
         email = ""
+        university = ""
 
         if request.method == "POST":
             name = request.form["name"].strip()
             email = request.form["email"].strip()
+            university = request.form["university"].strip()
             password = request.form["password"]
             confirm_password = request.form["confirm_password"]
 
-            if not name or not email or not password or not confirm_password:
+            if not name or not email or not password or not confirm_password or not university:
                 error = "All fields are required!"
 
             elif password != confirm_password:
@@ -41,6 +43,6 @@ def create_app():
 
             else:
                 print("Registration data is valid")
-        return render_template("register.html", error = error, name=name, email = email, universities = UK_UNIVERSITIES)
+        return render_template("register.html", error = error, name=name, email = email, university = university, universities = UK_UNIVERSITIES)
 
     return app
