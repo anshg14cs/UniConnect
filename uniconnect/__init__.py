@@ -1,8 +1,8 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, g
 from .universities import UK_UNIVERSITIES
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from .db import get_db
 
 def create_app():
@@ -16,6 +16,21 @@ def create_app():
 
     from . import db
     db.init_app(app)
+
+    app.config["SECRET_KEY"] = "dev"
+
+    @app.before_request
+    def load_logged_in_user():
+        user_id = session.get("user_id")
+
+        if user_id is None:
+            g.user = None
+
+        else:
+            g.user = get_db().execute(
+                "SELECT * FROM users WHERE id = ?",
+                (user_id,)
+            ).fetchone()
 
     @app.route("/")
     def home():
@@ -63,7 +78,40 @@ def create_app():
 
                 except sqlite3.IntegrityError:
                     error = "An account with that email already exists." 
-                
+    
         return render_template("register.html", error = error, name=name, email = email, university = university, universities = UK_UNIVERSITIES)
+    
+    @app.route("/login", methods=["GET", "POST"])
+    def login():
+        error = None
+        email = ""
+
+        if request.method == "POST":
+            email = request.form["email"].strip()
+            password = request.form["password"]
+
+            db = get_db()
+
+            user = db.execute(
+                "SELECT * FROM users WHERE email = ?",
+                (email,)
+            ).fetchone()
+
+            if user is None:
+                error = "Incorrect email or password."
+
+            elif not check_password_hash(user["password_hash"], password):
+                error = "Incorrect email or password."
+
+            else:
+                session["user_id"] = user["id"]
+                return redirect(url_for("home"))
+
+        return render_template("login.html")
+
+    @app.route("/logout")
+    def logout():
+        session.clear()
+        return redirect(url_for("home"))
 
     return app
