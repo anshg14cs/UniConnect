@@ -1,171 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Register | UniConnect</title>
 
     <link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='style.css') }}"
->
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 </head>
 
-<body>
 
-    <h1>Create your UniConnect account</h1>
+<body class="register-page">
 
-    {% if error %}
-    <p>{{ error }}</p>
-    {% endif %}
+    <main class="register-layout">
 
-    <form
-        action="{{ url_for('register') }}"
-        method="post"
-    >
+        <header class="register-header">
 
-        <div>
-            <label for="name">
-                Name
-            </label>
-
-            <input
-                type="text"
-                id="name"
-                name="name"
-                value = "{{name}}"
+            <a
+                href="{{ url_for('home') }}"
+                class="register-brand"
             >
-        </div>
+                <span class="brand-dark">Uni</span><span class="brand-green">Connect</span>
+            </a>
+
+            <h1>
+                Connect. Collaborate. Belong.
+            </h1>
+
+            <p>
+                Join your university community today.
+            </p>
+
+        </header>
 
 
-        <div>
-            <label for="email">
-                Email
-            </label>
+        <section class="register-card">
 
-            <input
-                type="email"
-                id="email"
-                name="email"
-                value = "{{email}}"
+            <h2>
+                Create your account
+            </h2>
+
+
+            {% if error %}
+
+                <p class="auth-error">
+                    {{ error }}
+                </p>
+
+            {% endif %}
+
+
+            <form
+                action="{{ url_for('register') }}"
+                method="post"
+                class="register-form"
             >
-        </div>
 
-<div class="university-field">
-    <label for="university-search">University:</label>
+                <div class="register-field">
 
-    <div class="university-dropdown">
-        <input
-            type="text"
-            id="university-search"
-            placeholder="Search for your university"
-            autocomplete="off"
-            value="{{ university }}"
-        >
+                    <label for="name">
+                        Name
+                    </label>
 
-        <input
-            type="hidden"
-            id="university"
-            name="university"
-            value="{{ university }}"
-        >
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        value="{{ name }}"
+                    >
 
-        <div
-            id="university-options"
-            class="university-options"
-        >
-            {% for university in universities %}
+                </div>
+
+
+                <div class="register-field">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        value="{{ email }}"
+                    >
+
+                </div>
+
+
+                <div class="register-field">
+
+                    <label for="university-search">
+                        University
+                    </label>
+
+                    <div class="university-dropdown">
+
+                        <input
+                            type="text"
+                            id="university-search"
+                            placeholder="Search for your university"
+                            autocomplete="off"
+                            value="{{ university }}"
+                        >
+
+                        <input
+                            type="hidden"
+                            id="university"
+                            name="university"
+                            value="{{ university }}"
+                        >
+
+                        <div
+                            id="university-options"
+                            class="university-options"
+                        >
+
+                            {% for university in universities %}
+
+                                <button
+                                    type="button"
+                                    class="university-option"
+                                    data-value="{{ university }}"
+                                >
+                                    {{ university }}
+                                </button>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="register-field">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                    >
+
+                </div>
+
+
+                <div class="register-field">
+
+                    <label for="confirm-password">
+                        Confirm password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        name="confirm_password"
+                        placeholder="Confirm your password"
+                    >
+
+                </div>
+
+
                 <button
-                    type="button"
-                    class="university-option"
-                    data-value="{{ university }}"
+                    type="submit"
+                    class="register-submit"
                 >
-                    {{ university }}
+                    Create account
                 </button>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-      
+
+            </form>
 
 
-        <div>
-            <label for="password">
-                Password
-            </label>
+            <p class="register-login">
 
-            <input
-                type="password"
-                id="password"
-                name="password"
-            >
-        </div>
+                Already have an account?
+
+                <a href="{{ url_for('login') }}">
+                    Log in
+                </a>
+
+            </p>
+
+        </section>
 
 
-        <div>
-            <label for="confirm-password">
-                Confirm password
-            </label>
+        <div class="register-trust">
 
-            <input
-                type="password"
-                id="confirm-password"
-                name="confirm_password"
-            >
+            <span>✓ Secure</span>
+
+            <span>✓ Private</span>
+
+            <span>✓ For students</span>
+
         </div>
 
+    </main>
 
-        <button type="submit">
-            Create account
-        </button>
 
-    </form>
 
-<script>
-    const searchInput = document.getElementById("university-search");
-    const hiddenInput = document.getElementById("university");
-    const optionsContainer = document.getElementById("university-options");
-    const options = document.querySelectorAll(".university-option");
+    <script>
 
-    searchInput.addEventListener("focus", function () {
-        optionsContainer.classList.add("show");
-    });
+        const searchInput =
+            document.getElementById("university-search");
 
-    searchInput.addEventListener("input", function () {
-        const searchValue = searchInput.value.toLowerCase();
+        const hiddenInput =
+            document.getElementById("university");
 
-        hiddenInput.value = "";
+        const optionsContainer =
+            document.getElementById("university-options");
 
-        options.forEach(function (option) {
-            const universityName = option.dataset.value.toLowerCase();
+        const options =
+            document.querySelectorAll(".university-option");
 
-            if (universityName.includes(searchValue)) {
-                option.style.display = "block";
-            } else {
-                option.style.display = "none";
+
+
+        searchInput.addEventListener(
+            "focus",
+            function () {
+
+                optionsContainer.classList.add("show");
+
             }
-        });
+        );
 
-        optionsContainer.classList.add("show");
-    });
 
-    options.forEach(function (option) {
-        option.addEventListener("click", function () {
-            const university = option.dataset.value;
 
-            searchInput.value = university;
-            hiddenInput.value = university;
+        searchInput.addEventListener(
+            "input",
+            function () {
 
-            optionsContainer.classList.remove("show");
-        });
-    });
+                const searchValue =
+                    searchInput.value.toLowerCase();
 
-    document.addEventListener("click", function (event) {
-        if (!event.target.closest(".university-dropdown")) {
-            optionsContainer.classList.remove("show");
-        }
-    });
-</script>
+
+                hiddenInput.value = "";
+
+
+                options.forEach(
+                    function (option) {
+
+                        const universityName =
+                            option.dataset.value.toLowerCase();
+
+
+                        if (
+                            universityName.includes(searchValue)
+                        ) {
+
+                            option.style.display = "block";
+
+                        } else {
+
+                            option.style.display = "none";
+
+                        }
+
+                    }
+                );
+
+
+                optionsContainer.classList.add("show");
+
+            }
+        );
+
+
+
+        options.forEach(
+            function (option) {
+
+                option.addEventListener(
+                    "click",
+                    function () {
+
+                        const university =
+                            option.dataset.value;
+
+
+                        searchInput.value =
+                            university;
+
+                        hiddenInput.value =
+                            university;
+
+
+                        optionsContainer.classList.remove(
+                            "show"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    !event.target.closest(
+                        ".university-dropdown"
+                    )
+                ) {
+
+                    optionsContainer.classList.remove(
+                        "show"
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
 
 </body>
+
 </html>
