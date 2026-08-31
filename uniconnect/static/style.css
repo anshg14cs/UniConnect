@@ -2619,7 +2619,7 @@ body.register-page {
    BLOBS
    ========================= */
 
-.register-blob {
+.register-wave {
     position: fixed;
 
     pointer-events: none;
@@ -2628,80 +2628,41 @@ body.register-page {
 }
 
 
-/* TOP RIGHT - OUTER */
+/* BOTTOM LEFT */
 
-.register-blob-top-one {
-    width: 430px;
-    height: 330px;
+.register-wave-bottom {
+    width: 380px;
+    height: 405px;
 
-    top: -145px;
-    right: -135px;
-
-    background:
-        rgba(25, 135, 84, 0.07);
-
-    border-radius:
-        38% 0 46% 54%
-        /
-        54% 0 46% 46%;
+    left: 0;
+    bottom: 0;
 }
 
 
-/* TOP RIGHT - INNER */
+/* TOP RIGHT */
 
-.register-blob-top-two {
-    width: 350px;
-    height: 265px;
+.register-wave-top {
+    width: 380px;
+    height: 405px;
 
-    top: -125px;
-    right: -125px;
+    top: 0;
+    right: 0;
 
-    background:
-        rgba(25, 135, 84, 0.055);
-
-    border-radius:
-        43% 0 50% 58%
-        /
-        60% 0 45% 42%;
+    transform: rotate(180deg);
 }
 
 
-/* BOTTOM LEFT - OUTER */
+/* TWO NESTED LAYERS */
 
-.register-blob-bottom-one {
-    width: 300px;
-    height: 330px;
+.wave-outer {
+    fill: rgba(25, 135, 84, 0.07);
+}
 
-    left: -135px;
-    bottom: -135px;
-
-    background:
-        rgba(25, 135, 84, 0.07);
-
-    border-radius:
-        0 58% 46% 0
-        /
-        0 46% 54% 0;
+.wave-inner {
+    fill: rgba(25, 135, 84, 0.055);
 }
 
 
-/* BOTTOM LEFT - INNER */
-
-.register-blob-bottom-two {
-    width: 245px;
-    height: 275px;
-
-    left: -120px;
-    bottom: -120px;
-
-    background:
-        rgba(25, 135, 84, 0.055);
-
-    border-radius:
-        0 55% 43% 0
-        /
-        0 48% 58% 0;
-}
 
 
 /* =========================
@@ -2732,11 +2693,11 @@ body.register-page {
 
 .register-dots-top {
     top: 62px;
-    left: 17%;
+    left: 12%;
 }
 
 
 .register-dots-bottom {
-    right: 13%;
-    bottom: 75px;
+    right: 7%;
+    bottom: 130px;
 }
