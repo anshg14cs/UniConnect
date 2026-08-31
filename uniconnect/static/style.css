@@ -1798,3 +1798,607 @@ button {
 .university-option:hover {
     background: #f2f2f2;
 }
+
+/* =========================
+   AUTH PAGE
+   ========================= */
+
+body.auth-page {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color: #1f2937;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(34, 139, 94, 0.10),
+            transparent 22%
+        ),
+        radial-gradient(
+            circle at bottom left,
+            rgba(34, 139, 94, 0.10),
+            transparent 18%
+        ),
+        linear-gradient(
+            135deg,
+            #f8fbf9 0%,
+            #edf7f1 100%
+        );
+
+    position: relative;
+    overflow: hidden;
+}
+
+
+body.auth-page::before {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    background-image:
+        radial-gradient(
+            rgba(34, 139, 94, 0.15) 1px,
+            transparent 1px
+        );
+
+    background-size: 28px 28px;
+
+    opacity: 0.25;
+
+    pointer-events: none;
+}
+
+
+/* MAIN LAYOUT */
+
+.auth-layout {
+    min-height: 100vh;
+
+    width: min(1200px, 92%);
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        500px
+        minmax(0, 1fr);
+
+    gap: 65px;
+
+    align-items: center;
+
+    padding: 40px 0;
+
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================
+   LOGIN CARD
+   ========================= */
+
+.auth-card {
+    width: 100%;
+
+    padding: 42px 48px;
+
+    background:
+        rgba(255, 255, 255, 0.94);
+
+    border:
+        1px solid rgba(15, 23, 42, 0.06);
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+.auth-brand {
+    display: inline-block;
+
+    margin-bottom: 30px;
+
+    font-size: 2rem;
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+
+.brand-dark {
+    color: #0f172a;
+}
+
+
+.brand-green {
+    color: var(--green);
+}
+
+
+.auth-card h1 {
+    margin: 0 0 12px;
+
+    font-size: 3rem;
+    line-height: 1.05;
+
+    color: #0f172a;
+}
+
+
+.auth-subtext {
+    margin: 0 0 34px;
+
+    color: var(--text-soft);
+
+    font-size: 1.2rem;
+}
+
+
+/* =========================
+   FORM
+   ========================= */
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 700;
+
+    color: #1f2937;
+}
+
+
+.form-group input {
+    width: 100%;
+    height: 58px;
+
+    padding: 0 18px;
+
+    border: 1px solid #d9dee7;
+    border-radius: 14px;
+
+    background: white;
+
+    color: #111827;
+
+    font-size: 1rem;
+
+    outline: none;
+}
+
+
+.form-group input:focus {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(25, 135, 84, 0.12);
+}
+
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+.auth-button {
+    width: 100%;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    font-size: 1.05rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+
+.primary-button {
+    border: 0;
+
+    background: var(--green);
+
+    color: white;
+}
+
+
+.primary-button:hover {
+    background: var(--green-dark);
+}
+
+
+.secondary-button {
+    background: white;
+
+    color: var(--green);
+
+    border: 1px solid #d7e2db;
+}
+
+
+/* DIVIDER */
+
+.auth-divider {
+    margin: 28px 0 18px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    color: #7b8794;
+
+    font-size: 0.95rem;
+}
+
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #e5e7eb;
+}
+
+
+/* ERROR */
+
+.auth-error {
+    margin: 0 0 22px;
+
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    background: #fff4f4;
+
+    color: #b42318;
+
+    border: 1px solid #f1c0c0;
+}
+
+/* =========================
+   RIGHT AUTH AREA
+   ========================= */
+
+.auth-visual {
+    position: relative;
+
+    min-height: 680px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(400px, 1fr)
+        400px;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+
+/* =========================
+   TEXT SIDE
+   ========================= */
+
+.auth-visual-message {
+    position: relative;
+
+    z-index: 5;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    min-width: 0;
+}
+
+
+.visual-copy {
+    width: 100%;
+    max-width: 540px;
+
+    position: relative;
+
+    z-index: 5;
+}
+
+
+.visual-copy h2 {
+    margin: 0 0 22px;
+
+    font-size: 3.7rem;
+    line-height: 1.04;
+
+    letter-spacing: -2px;
+
+    color: #0f172a;
+}
+
+
+.visual-copy h2 span {
+    color: var(--green);
+}
+
+
+.visual-copy p {
+    width: 100%;
+    max-width: 440px;
+
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 1.15rem;
+    line-height: 1.65;
+}
+
+
+/* =========================
+   STAT CARD
+   ========================= */
+
+.visual-stat {
+    position: static;
+
+    margin-top: 55px;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 16px 20px;
+
+    background:
+        rgba(228, 245, 235, 0.92);
+
+    border:
+        1px solid rgba(25, 135, 84, 0.10);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(31, 41, 55, 0.04);
+
+    z-index: 5;
+}
+
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: white;
+}
+
+
+.visual-stat strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--green-dark);
+
+    font-size: 14px;
+}
+
+
+.visual-stat span {
+    display: block;
+
+    color: #4d7560;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   NETWORK
+   ========================= */
+
+.student-network {
+    position: relative;
+
+    width: 400px;
+    height: 560px;
+
+    justify-self: end;
+}
+
+
+/* ACTUAL CONNECTION LINES */
+
+.network-svg {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: visible;
+
+    z-index: 1;
+}
+
+
+.network-svg line {
+    stroke:
+        rgba(25, 135, 84, 0.22);
+
+    stroke-width: 2;
+}
+
+
+/* =========================
+   STUDENT PROFILES
+   ========================= */
+
+.student-avatar {
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    display: grid;
+    place-items: center;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background: white;
+
+    border: 5px solid white;
+
+    box-shadow:
+        0 14px 30px
+        rgba(31, 41, 55, 0.11);
+
+    color: var(--green);
+
+    font-weight: 750;
+
+    z-index: 3;
+}
+
+
+/*
+   These positions correspond to
+   the SVG coordinates above.
+*/
+
+.student-avatar-one {
+    left: 210px;
+    top: 75px;
+}
+
+
+.student-avatar-two {
+    left: 320px;
+    top: 240px;
+}
+
+
+.student-avatar-three {
+    left: 65px;
+    top: 445px;
+}
+
+
+.student-avatar-four {
+    left: 235px;
+    top: 455px;
+}
+
+
+/* =========================
+   SMALL CONNECTION POINTS
+   ========================= */
+
+.network-point {
+    position: absolute;
+
+    width: 15px;
+    height: 15px;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        rgba(25, 135, 84, 0.45);
+
+    z-index: 2;
+}
+
+
+.point-one {
+    left: 160px;
+    top: 320px;
+}
+
+
+.point-two {
+    left: 235px;
+    top: 455px;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1200px) {
+
+    .auth-visual {
+        grid-template-columns:
+            minmax(330px, 1fr)
+            340px;
+
+        gap: 10px;
+    }
+
+
+    .student-network {
+        width: 340px;
+
+        transform:
+            scale(0.88);
+
+        transform-origin:
+            center right;
+    }
+
+
+    .visual-copy h2 {
+        font-size: 3.2rem;
+    }
+}

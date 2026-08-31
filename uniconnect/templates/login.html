@@ -1,44 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login | UniConnect</title>
 
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}"
     >
-
-    <title>Login - UniConnect</title>
 </head>
 
-<body>
 
-    <h1>Login</h1>
+<body class="auth-page">
 
-    <form method="POST" action="{{ url_for('login') }}">
+    <main class="auth-layout">
 
-        <label for="email">Email:</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-        >
+        <!-- LEFT SIDE -->
 
-        <br><br>
+        <section class="auth-card">
 
-        <label for="password">Password:</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-        >
+            <a
+                href="{{ url_for('home') }}"
+                class="auth-brand"
+            >
+                <span class="brand-dark">Uni</span><span class="brand-green">Connect</span>
+            </a>
 
-        <br><br>
 
-        <button type="submit">Login</button>
+            <h1>Welcome back</h1>
 
-    </form>
+            <p class="auth-subtext">
+                Log in to your UniConnect account.
+            </p>
+
+
+            {% if error %}
+
+                <p class="auth-error">
+                    {{ error }}
+                </p>
+
+            {% endif %}
+
+
+            <form
+                method="POST"
+                action="{{ url_for('login') }}"
+                class="auth-form"
+            >
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        value="{{ email }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-button primary-button"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <div class="auth-divider">
+
+                <span>
+                    New to UniConnect?
+                </span>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('register') }}"
+                class="auth-button secondary-button"
+            >
+                Create an account
+            </a>
+
+        </section>
+
+
+        <section class="auth-visual">
+
+            <div class="auth-visual-message">
+
+                <div class="visual-copy">
+
+                    <h2>
+                        Meet students.
+                        <br>
+                        <span>Find your people.</span>
+                    </h2>
+
+                    <p>
+                        Join a community of students,
+                        discover shared interests and
+                        build connections across campus.
+                    </p>
+
+                </div>
+
+
+                <div class="visual-stat">
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                    <div>
+                        <strong>
+                            Thousands of students.
+                        </strong>
+
+                        <span>
+                            One connected campus.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="student-network">
+
+                <svg
+                    class="network-svg"
+                    viewBox="0 0 400 560"
+                    preserveAspectRatio="none"
+                >
+
+                    <line
+                        x1="210"
+                        y1="75"
+                        x2="320"
+                        y2="240"
+                    />
+
+                    <line
+                        x1="210"
+                        y1="75"
+                        x2="160"
+                        y2="320"
+                    />
+
+                    <line
+                        x1="320"
+                        y1="240"
+                        x2="235"
+                        y2="455"
+                    />
+
+                    <line
+                        x1="160"
+                        y1="320"
+                        x2="235"
+                        y2="455"
+                    />
+
+                    <line
+                        x1="160"
+                        y1="320"
+                        x2="65"
+                        y2="445"
+                    />
+
+                    <line
+                        x1="65"
+                        y1="445"
+                        x2="235"
+                        y2="455"
+                    />
+
+                </svg>
+
+
+                <div class="network-point point-one"></div>
+
+                <div class="network-point point-two"></div>
+
+
+                <div class="student-avatar student-avatar-one">
+                    AJ
+                </div>
+
+                <div class="student-avatar student-avatar-two">
+                    SM
+                </div>
+
+                <div class="student-avatar student-avatar-three">
+                    LE
+                </div>
+
+                <div class="student-avatar student-avatar-four">
+                    RK
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
 
 </body>
+
 </html>
