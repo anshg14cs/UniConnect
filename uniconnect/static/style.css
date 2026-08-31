@@ -2364,13 +2364,15 @@ body.register-page {
     text-align: center;
 
     margin-bottom: 24px;
+
+    transform: translateY(-15px);
 }
 
 
 .register-brand {
     display: inline-block;
 
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 
     font-size: 1.65rem;
     font-weight: 800;
@@ -2381,8 +2383,6 @@ body.register-page {
     margin: 0 0 7px;
 
     font-size: 1.85rem;
-
-    color: var(--green-dark);
 }
 
 
@@ -2424,6 +2424,10 @@ body.register-page {
     font-size: 1.55rem;
 
     color: #111827;
+}
+
+.register-green {
+    color: var(--green);
 }
 
 
@@ -2591,4 +2595,148 @@ body.register-page {
 
         opacity: 0.8;
     }
+}
+
+/* =========================
+   REGISTRATION DECORATION
+   ========================= */
+
+body.register-page {
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* Make actual page content stay above decoration */
+
+.register-layout {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* =========================
+   BLOBS
+   ========================= */
+
+.register-blob {
+    position: fixed;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+/* TOP RIGHT - OUTER */
+
+.register-blob-top-one {
+    width: 430px;
+    height: 330px;
+
+    top: -145px;
+    right: -135px;
+
+    background:
+        rgba(25, 135, 84, 0.07);
+
+    border-radius:
+        38% 0 46% 54%
+        /
+        54% 0 46% 46%;
+}
+
+
+/* TOP RIGHT - INNER */
+
+.register-blob-top-two {
+    width: 350px;
+    height: 265px;
+
+    top: -125px;
+    right: -125px;
+
+    background:
+        rgba(25, 135, 84, 0.055);
+
+    border-radius:
+        43% 0 50% 58%
+        /
+        60% 0 45% 42%;
+}
+
+
+/* BOTTOM LEFT - OUTER */
+
+.register-blob-bottom-one {
+    width: 300px;
+    height: 330px;
+
+    left: -135px;
+    bottom: -135px;
+
+    background:
+        rgba(25, 135, 84, 0.07);
+
+    border-radius:
+        0 58% 46% 0
+        /
+        0 46% 54% 0;
+}
+
+
+/* BOTTOM LEFT - INNER */
+
+.register-blob-bottom-two {
+    width: 245px;
+    height: 275px;
+
+    left: -120px;
+    bottom: -120px;
+
+    background:
+        rgba(25, 135, 84, 0.055);
+
+    border-radius:
+        0 55% 43% 0
+        /
+        0 48% 58% 0;
+}
+
+
+/* =========================
+   DOT GRIDS
+   ========================= */
+
+.register-dots {
+    position: fixed;
+
+    width: 115px;
+    height: 85px;
+
+    background-image:
+        radial-gradient(
+            circle,
+            rgba(25, 135, 84, 0.70) 1.5px,
+            transparent 1.7px
+        );
+
+    background-size:
+        22px 22px;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+.register-dots-top {
+    top: 62px;
+    left: 17%;
+}
+
+
+.register-dots-bottom {
+    right: 13%;
+    bottom: 75px;
 }
