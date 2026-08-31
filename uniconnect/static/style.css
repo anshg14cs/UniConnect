@@ -1862,7 +1862,7 @@ body.auth-page::before {
 .auth-layout {
     min-height: 100vh;
 
-    width: min(1200px, 92%);
+    width: min(1320px, 92%);
     margin: 0 auto;
 
     display: grid;
@@ -1871,7 +1871,7 @@ body.auth-page::before {
         500px
         minmax(0, 1fr);
 
-    gap: 65px;
+    gap: 140px;
 
     align-items: center;
 
@@ -2104,12 +2104,12 @@ body.auth-page::before {
     display: grid;
 
     grid-template-columns:
-        minmax(400px, 1fr)
-        400px;
+        minmax(480px, 1fr)
+        360px;
 
     align-items: center;
 
-    gap: 20px;
+    gap: 0px;
 }
 
 
@@ -2128,12 +2128,14 @@ body.auth-page::before {
     align-items: flex-start;
 
     min-width: 0;
+
+    transform: translateY(-40px);
 }
 
 
 .visual-copy {
     width: 100%;
-    max-width: 540px;
+    max-width: 400px;
 
     position: relative;
 
@@ -2144,7 +2146,7 @@ body.auth-page::before {
 .visual-copy h2 {
     margin: 0 0 22px;
 
-    font-size: 3.7rem;
+    font-size: 3.4rem;
     line-height: 1.04;
 
     letter-spacing: -2px;
@@ -2169,72 +2171,7 @@ body.auth-page::before {
     font-size: 1.15rem;
     line-height: 1.65;
 }
-
-
-/* =========================
-   STAT CARD
-   ========================= */
-
-.visual-stat {
-    position: static;
-
-    margin-top: 55px;
-
-    display: inline-flex;
-    align-items: center;
-
-    gap: 14px;
-
-    padding: 16px 20px;
-
-    background:
-        rgba(228, 245, 235, 0.92);
-
-    border:
-        1px solid rgba(25, 135, 84, 0.10);
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 10px 30px rgba(31, 41, 55, 0.04);
-
-    z-index: 5;
-}
-
-
-.stat-icon {
-    width: 48px;
-    height: 48px;
-
-    flex-shrink: 0;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 50%;
-
-    background: white;
-}
-
-
-.visual-stat strong {
-    display: block;
-
-    margin-bottom: 4px;
-
-    color: var(--green-dark);
-
-    font-size: 14px;
-}
-
-
-.visual-stat span {
-    display: block;
-
-    color: #4d7560;
-
-    font-size: 13px;
-}
+ 
 
 
 /* =========================
@@ -2248,6 +2185,8 @@ body.auth-page::before {
     height: 560px;
 
     justify-self: end;
+
+    transform: translate(-60px, -10px);
 }
 
 
@@ -2333,40 +2272,6 @@ body.auth-page::before {
 
 
 .student-avatar-four {
-    left: 235px;
-    top: 455px;
-}
-
-
-/* =========================
-   SMALL CONNECTION POINTS
-   ========================= */
-
-.network-point {
-    position: absolute;
-
-    width: 15px;
-    height: 15px;
-
-    transform:
-        translate(-50%, -50%);
-
-    border-radius: 50%;
-
-    background:
-        rgba(25, 135, 84, 0.45);
-
-    z-index: 2;
-}
-
-
-.point-one {
-    left: 160px;
-    top: 320px;
-}
-
-
-.point-two {
     left: 235px;
     top: 455px;
 }
