@@ -70,6 +70,32 @@
 
         </section>
 
+        <section class="profile-card">
+
+            <div class="profile-card-heading">
+                <h2>Interests</h2>
+            </div>
+
+            {% if interests %}
+
+                <div class="profile-interests">
+                    {% for interest in interests %}
+                        <span class="profile-interest">
+                            {{ interest["name"] }}
+                        </span>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                <p class="profile-empty">
+                    No interests added yet.
+                </p>
+
+            {% endif %}
+
+        </section>
+
     </main>
 
 </body>

@@ -118,8 +118,24 @@ def create_app():
     def profile():
         if g.user is None:
             return redirect(url_for("login"))
+        db = get_db()
 
-        return render_template("profile.html", user=g.user)
+        interests = db.execute(
+            """
+            SELECT interests.name
+            FROM interests
+            JOIN user_interests
+                ON interests.id = user_interests.interest_id
+            WHERE user_interests.user_id = ?
+            """,
+            (g.user["id"],)
+        ).fetchall()
+
+        return render_template(
+            "profile.html",
+            user=g.user,
+            interests=interests
+        )
 
     @app.route("/profile/edit", methods=["GET", "POST"])
     def edit_profile():
