@@ -121,4 +121,47 @@ def create_app():
 
         return render_template("profile.html", user=g.user)
 
+    @app.route("/profile/edit", methods=["GET", "POST"])
+    def edit_profile():
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        if request.method == "POST":
+            name = request.form["name"].strip()
+            university = request.form["university"].strip()
+            course = request.form["course"].strip()
+            year_of_study = request.form["year_of_study"].strip()
+            location = request.form["location"].strip()
+            bio = request.form["bio"].strip()
+
+            db = get_db()
+
+            db.execute(
+                """
+                UPDATE users
+                SET name = ?,
+                    university = ?,
+                    course = ?,
+                    year_of_study = ?,
+                    location = ?,
+                    bio = ?
+                WHERE id = ?
+                """,
+                (
+                    name,
+                    university,
+                    course,
+                    year_of_study,
+                    location,
+                    bio,
+                    g.user["id"]
+                )
+            )
+
+            db.commit()
+
+            return redirect(url_for("profile"))
+
+        return render_template("edit_profile.html", user=g.user)
+
     return app

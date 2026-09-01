@@ -48,6 +48,26 @@
 
             </div>
 
+            <a href="{{ url_for('edit_profile') }}" class="profile-edit-button">
+                Edit Profile
+            </a>
+
+        </section>
+
+        <section class="profile-card profile-about">
+
+            <div class="profile-card-heading">
+                <h2>About Me</h2>
+            </div>
+
+            {% if user["bio"] %}
+                <p>{{ user["bio"] }}</p>
+            {% else %}
+                <p class="profile-empty">
+                    Tell other students a little about yourself.
+                </p>
+            {% endif %}
+
         </section>
 
     </main>

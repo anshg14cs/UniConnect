@@ -2777,3 +2777,147 @@ body.profile-page {
     color: var(--text-soft);
     font-size: 0.9rem;
 }
+
+/* ================================
+   EDIT PROFILE BUTTON STYLE
+   ========================= */
+
+.profile-edit-button {
+    margin-left: auto;
+
+    padding: 10px 18px;
+
+    border: 1px solid var(--green);
+    border-radius: 9px;
+
+    color: var(--green);
+    background: white;
+
+    font-size: 0.9rem;
+    font-weight: 650;
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.profile-edit-button:hover {
+    background: var(--green);
+    color: white;
+}
+
+
+/* ================================
+   EDIT PROFILE PAGE STYLE
+   ========================= */
+
+body.edit-profile-page {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    background: #f6faf7;
+    color: var(--text);
+}
+
+.edit-profile-container {
+    width: min(700px, 92%);
+    margin: 0 auto;
+    padding: 50px 0;
+}
+
+.edit-profile-card {
+    padding: 32px;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    box-shadow: 0 14px 35px rgba(31, 41, 55, 0.06);
+}
+
+.edit-profile-card h1 {
+    margin: 0 0 28px;
+
+    font-size: 1.7rem;
+    color: #111827;
+}
+
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.edit-profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.edit-profile-field label {
+    font-size: 0.9rem;
+    font-weight: 650;
+
+    color: #374151;
+}
+
+.edit-profile-field input,
+.edit-profile-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 13px 14px;
+
+    border: 1px solid #d9dee7;
+    border-radius: 10px;
+
+    font: inherit;
+
+    outline: none;
+}
+
+.edit-profile-field input:focus,
+.edit-profile-field textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.11);
+}
+
+.edit-profile-field textarea {
+    resize: vertical;
+}
+
+.edit-profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 6px;
+}
+
+.edit-profile-save {
+    padding: 11px 18px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: var(--green);
+    color: white;
+
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.edit-profile-save:hover {
+    background: var(--green-dark);
+}
+
+.edit-profile-cancel {
+    padding: 10px 18px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    color: var(--text);
+    text-decoration: none;
+}
