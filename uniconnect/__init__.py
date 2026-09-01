@@ -107,11 +107,18 @@ def create_app():
                 session["user_id"] = user["id"]
                 return redirect(url_for("home"))
 
-        return render_template("login.html")
+        return render_template("login.html", error=error, email = email)
 
     @app.route("/logout")
     def logout():
         session.clear()
         return redirect(url_for("home"))
+
+    @app.route("/profile")
+    def profile():
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        return render_template("profile.html", user=g.user)
 
     return app
