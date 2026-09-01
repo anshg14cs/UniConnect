@@ -107,11 +107,77 @@ def create_app():
                 session["user_id"] = user["id"]
                 return redirect(url_for("home"))
 
-        return render_template("login.html")
+        return render_template("login.html", error=error, email = email)
 
     @app.route("/logout")
     def logout():
         session.clear()
         return redirect(url_for("home"))
+
+    @app.route("/profile")
+    def profile():
+        if g.user is None:
+            return redirect(url_for("login"))
+        db = get_db()
+
+        interests = db.execute(
+            """
+            SELECT interests.name
+            FROM interests
+            JOIN user_interests
+                ON interests.id = user_interests.interest_id
+            WHERE user_interests.user_id = ?
+            """,
+            (g.user["id"],)
+        ).fetchall()
+
+        return render_template(
+            "profile.html",
+            user=g.user,
+            interests=interests
+        )
+
+    @app.route("/profile/edit", methods=["GET", "POST"])
+    def edit_profile():
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        if request.method == "POST":
+            name = request.form["name"].strip()
+            university = request.form["university"].strip()
+            course = request.form["course"].strip()
+            year_of_study = request.form["year_of_study"].strip()
+            location = request.form["location"].strip()
+            bio = request.form["bio"].strip()
+
+            db = get_db()
+
+            db.execute(
+                """
+                UPDATE users
+                SET name = ?,
+                    university = ?,
+                    course = ?,
+                    year_of_study = ?,
+                    location = ?,
+                    bio = ?
+                WHERE id = ?
+                """,
+                (
+                    name,
+                    university,
+                    course,
+                    year_of_study,
+                    location,
+                    bio,
+                    g.user["id"]
+                )
+            )
+
+            db.commit()
+
+            return redirect(url_for("profile"))
+
+        return render_template("edit_profile.html", user=g.user)
 
     return app

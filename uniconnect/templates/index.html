@@ -42,9 +42,9 @@
             </a>
 
             {% if g.user %}
-                <span>
-                    {{ g.user["name"] }}
-                </span>
+            <a href="{{ url_for('profile') }}">
+                {{ g.user["name"] }}
+            </a>
                 <a href="{{ url_for('logout') }}">Logout</a> 
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a>

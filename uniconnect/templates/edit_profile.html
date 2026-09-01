@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Profile | UniConnect</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="edit-profile-page">
+
+    <main class="edit-profile-container">
+
+        <section class="edit-profile-card">
+
+            <h1>Edit Profile</h1>
+
+            <form method="post" class="edit-profile-form">
+
+                <div class="edit-profile-field">
+                    <label for="name">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value="{{ user['name'] }}"
+                    >
+                </div>
+
+                <div class="edit-profile-field">
+                    <label for="university">University</label>
+                    <input
+                        type="text"
+                        id="university"
+                        name="university"
+                        value="{{ user['university'] }}"
+                    >
+                </div>
+
+                <div class="edit-profile-field">
+                    <label for="course">Course</label>
+                    <input
+                        type="text"
+                        id="course"
+                        name="course"
+                        value="{{ user['course'] or '' }}"
+                        placeholder="e.g. Computer Science"
+                    >
+                </div>
+
+                <div class="edit-profile-field">
+                    <label for="year_of_study">Year of study</label>
+                    <input
+                        type="text"
+                        id="year_of_study"
+                        name="year_of_study"
+                        value="{{ user['year_of_study'] or '' }}"
+                        placeholder="e.g. 2nd Year"
+                    >
+                </div>
+
+                <div class="edit-profile-field">
+                    <label for="location">Location</label>
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value="{{ user['location'] or '' }}"
+                        placeholder="e.g. Manchester"
+                    >
+                </div>
+
+                <div class="edit-profile-field">
+                    <label for="bio">About Me</label>
+                    <textarea
+                        id="bio"
+                        name="bio"
+                        rows="5"
+                        placeholder="Tell other students a little about yourself."
+                    >{{ user['bio'] or '' }}</textarea>
+                </div>
+
+                <div class="edit-profile-actions">
+                    <button type="submit" class="edit-profile-save">
+                        Save Changes
+                    </button>
+
+                    <a href="{{ url_for('profile') }}" class="edit-profile-cancel">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
