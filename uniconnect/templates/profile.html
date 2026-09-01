@@ -4,21 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user["name"] }} | UniConnect</title>
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 </head>
 
-<body>
+<body class="profile-page">
 
-    <h1>{{ user["name"] }}</h1>
+    <main class="profile-container">
 
-    <p>{{ user["university"] }}</p>
+        <section class="profile-header">
 
-    <p>Course: {{ user["course"] }}</p>
+            <div class="profile-avatar">
+                {{ user["name"][0] | upper }}
+            </div>
 
-    <p>Year of study: {{ user["year_of_study"] }}</p>
+            <div class="profile-header-info">
 
-    <p>Location: {{ user["location"] }}</p>
+                <h1>{{ user["name"] }}</h1>
 
-    <p>About me: {{ user["bio"] }}</p>
+                <p class="profile-university">
+                    {{ user["university"] }}
+                </p>
+
+                {% if user["course"] %}
+                    <p class="profile-course">
+                        {{ user["course"] }}
+                    </p>
+                {% endif %}
+
+                <div class="profile-details">
+
+                    {% if user["year_of_study"] %}
+                        <span>{{ user["year_of_study"] }}</span>
+                    {% endif %}
+
+                    {% if user["location"] %}
+                        <span>{{ user["location"] }}</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </body>
 </html>
