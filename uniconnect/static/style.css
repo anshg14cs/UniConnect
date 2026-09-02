@@ -119,8 +119,7 @@ button {
 
     display: flex;
     align-items: center;
-
-    gap: 32px;
+    gap: 32px
 
 }
 
@@ -132,6 +131,10 @@ button {
     font-weight: 500;
 
     color: #374151;
+
+    text-align: center;
+
+    width: 95px
 
 }
 
@@ -152,6 +155,8 @@ button {
     background: var(--green);
 
     color: white !important;
+
+    white-space: nowrap;
 
 }
 
@@ -2973,4 +2978,163 @@ body.edit-profile-page {
     background: var(--green-light);
     border-color: var(--green);
     color: var(--green-dark);
+}
+
+body.students-page {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    background: #f6faf7;
+    color: var(--text);
+}
+
+.students-container {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+    padding: 45px 0 70px;
+}
+
+.students-container > h1 {
+    margin: 0 0 28px;
+
+    font-size: 2rem;
+    color: #111827;
+}
+
+.students-directory-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.students-directory-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 22px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: 0 10px 28px rgba(31, 41, 55, 0.05);
+
+    text-decoration: none;
+    color: inherit;
+
+    transition: 0.2s ease;
+}
+
+.students-directory-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(31, 41, 55, 0.08);
+}
+
+.students-directory-avatar {
+    width: 64px;
+    height: 64px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--green);
+    color: white;
+
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.students-directory-info h2 {
+    margin: 0 0 5px;
+
+    font-size: 1.1rem;
+    color: #111827;
+}
+
+.students-directory-info p {
+    margin: 0 0 5px;
+
+    color: var(--green);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.students-directory-info span {
+    color: var(--text-soft);
+    font-size: 0.85rem;
+}
+
+.students-search {
+    display: flex;
+    gap: 10px;
+
+    margin-bottom: 24px;
+}
+
+.students-search input {
+    flex: 1;
+
+    padding: 12px 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    font: inherit;
+    outline: none;
+}
+
+.students-search input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.11);
+}
+
+.students-search button {
+    padding: 12px 18px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: var(--green);
+    color: white;
+
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.students-search button:hover {
+    background: var(--green-dark);
+}
+
+.students-empty {
+    padding: 45px 25px;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 28px rgba(31, 41, 55, 0.05);
+}
+
+.students-empty h2 {
+    margin: 0 0 8px;
+
+    color: #111827;
+    font-size: 1.2rem;
+}
+
+.students-empty p {
+    margin: 0;
+
+    color: var(--text-soft);
 }

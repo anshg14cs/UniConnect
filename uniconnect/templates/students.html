@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Students | UniConnect</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="students-page">
+
+    <main class="students-container">
+
+        <h1>Students</h1>
+
+        <form method="get" action="{{ url_for('students') }}" class="students-search">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search students, universities or courses..."
+                value="{{ search }}"
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+        {% if users %}
+
+            <div class="students-directory-list">
+
+                {% for user in users %}
+
+                    <a
+                        href="{{ url_for('user_profile', user_id=user['id']) }}"
+                        class="students-directory-card"
+                    >
+
+                        <div class="students-directory-avatar">
+                            {{ user["name"][0] | upper }}
+                        </div>
+
+                        <div class="students-directory-info">
+
+                            <h2>{{ user["name"] }}</h2>
+
+                            <p>{{ user["university"] }}</p>
+
+                            {% if user["course"] %}
+                                <span>{{ user["course"] }}</span>
+                            {% endif %}
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="students-empty">
+
+                {% if search %}
+
+                    <h2>No students found</h2>
+
+                    <p>
+                        No students matched "{{ search }}".
+                    </p>
+
+                {% else %}
+
+                    <h2>No other students yet</h2>
+
+                    <p>
+                        Other UniConnect users will appear here.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

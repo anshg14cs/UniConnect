@@ -254,6 +254,8 @@ def create_app():
 
         db = get_db()
 
+        search = request.args.get("search", "").strip()
+
         users = db.execute(
             """
             SELECT *
@@ -264,9 +266,42 @@ def create_app():
             (g.user["id"],)
         ).fetchall()
 
+        if search:
+            users = db.execute(
+                """
+                SELECT *
+                FROM users
+                WHERE id != ?
+                AND (
+                    name LIKE ?
+                    OR university LIKE ?
+                    OR course LIKE ?
+                )
+                ORDER BY name
+                """,
+                (
+                    g.user["id"],
+                    f"%{search}%",
+                    f"%{search}%",
+                    f"%{search}%"
+                )
+            ).fetchall()
+
+        else:
+            users = db.execute(
+                """
+                SELECT *
+                FROM users
+                WHERE id != ?
+                ORDER BY name
+                """,
+                (g.user["id"],)
+            ).fetchall()
+
         return render_template(
             "students.html",
-            users=users
+            users=users,
+            search = search
         )
 
     return app
