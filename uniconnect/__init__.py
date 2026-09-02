@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session, g
+from flask import Flask, render_template, request, redirect, url_for, session, g, abort
 from .universities import UK_UNIVERSITIES
 from werkzeug.security import generate_password_hash, check_password_hash
 from .db import get_db
@@ -215,4 +215,59 @@ def create_app():
 
         return render_template("edit_profile.html", user=g.user, all_interests=all_interests, selected_interest_ids=selected_interest_ids)
 
+    @app.route("/users/<int:user_id>")
+    def user_profile(user_id):
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        user = db.execute(
+            "SELECT * FROM users WHERE id = ?",
+            (user_id,)
+        ).fetchone()
+
+        if user is None:
+            abort(404)
+
+        interests = db.execute(
+            """
+            SELECT interests.name
+            FROM interests
+            JOIN user_interests
+                ON interests.id = user_interests.interest_id
+            WHERE user_interests.user_id = ?
+            """,
+            (user_id,)
+        ).fetchall()
+
+        return render_template(
+            "profile.html",
+            user=user,
+            interests=interests
+        )
+    
+    @app.route("/students")
+    def students():
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        users = db.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE id != ?
+            ORDER BY name
+            """,
+            (g.user["id"],)
+        ).fetchall()
+
+        return render_template(
+            "students.html",
+            users=users
+        )
+
     return app
+
