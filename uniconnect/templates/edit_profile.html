@@ -82,6 +82,35 @@
                     >{{ user['bio'] or '' }}</textarea>
                 </div>
 
+                <div class="edit-profile-field">
+
+                    <label>Interests</label>
+
+                    <div class="edit-interest-options">
+
+                        {% for interest in all_interests %}
+
+                            <label class="edit-interest-option">
+
+                                <input
+                                    type="checkbox"
+                                    name="interests"
+                                    value="{{ interest['id'] }}"
+
+                                    {% if interest['id'] in selected_interest_ids %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>{{ interest["name"] }}</span>
+
+                            </label>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+
                 <div class="edit-profile-actions">
                     <button type="submit" class="edit-profile-save">
                         Save Changes

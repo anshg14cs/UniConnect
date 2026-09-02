@@ -2921,3 +2921,56 @@ body.edit-profile-page {
     color: var(--text);
     text-decoration: none;
 }
+
+.profile-interests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.profile-interest {
+    padding: 8px 13px;
+
+    background: var(--green-light);
+    color: var(--green-dark);
+
+    border-radius: 999px;
+
+    font-size: 0.88rem;
+    font-weight: 650;
+}
+
+.edit-interest-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.edit-interest-option {
+    cursor: pointer;
+}
+
+.edit-interest-option input {
+    display: none;
+}
+
+.edit-interest-option span {
+    display: inline-block;
+
+    padding: 8px 13px;
+
+    border: 1px solid #d9e5dc;
+    border-radius: 999px;
+
+    background: white;
+    color: #4b5563;
+
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.edit-interest-option input:checked + span {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green-dark);
+}

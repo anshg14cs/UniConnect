@@ -26,3 +26,25 @@ CREATE TABLE IF NOT EXISTS user_interests (
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (interest_id) REFERENCES interests (id)
 );
+
+INSERT OR IGNORE INTO interests (name) VALUES
+    ('Football'),
+    ('Cricket'),
+    ('Basketball'),
+    ('Tennis'),
+    ('Gym'),
+    ('Running'),
+    ('Gaming'),
+    ('Music'),
+    ('Movies'),
+    ('Reading'),
+    ('Travel'),
+    ('Photography'),
+    ('Coding'),
+    ('Artificial Intelligence'),
+    ('Web Development'),
+    ('Cybersecurity'),
+    ('Art'),
+    ('Cooking'),
+    ('Volunteering'),
+    ('Entrepreneurship');

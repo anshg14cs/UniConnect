@@ -142,6 +142,8 @@ def create_app():
         if g.user is None:
             return redirect(url_for("login"))
 
+        db = get_db()
+
         if request.method == "POST":
             name = request.form["name"].strip()
             university = request.form["university"].strip()
@@ -149,8 +151,8 @@ def create_app():
             year_of_study = request.form["year_of_study"].strip()
             location = request.form["location"].strip()
             bio = request.form["bio"].strip()
+            selected_interests = request.form.getlist("interests")
 
-            db = get_db()
 
             db.execute(
                 """
@@ -174,10 +176,43 @@ def create_app():
                 )
             )
 
+            db.execute(
+                "DELETE FROM user_interests WHERE user_id = ?",
+                (g.user["id"],)
+            )
+
+            for interest_id in selected_interests:
+                db.execute(
+                    """
+                    INSERT INTO user_interests (user_id, interest_id)
+                    VALUES (?, ?)
+                    """,
+                    (g.user["id"], interest_id)
+                )
+
             db.commit()
 
             return redirect(url_for("profile"))
+        all_interests = db.execute(
+                            """
+                            SELECT *
+                            FROM interests
+                            ORDER BY name
+                            """
+                        ).fetchall()
+        selected_interests = db.execute(
+                            """
+                            SELECT interest_id
+                            FROM user_interests
+                            WHERE user_id = ?
+                            """,
+                            (g.user["id"],)
+                        ).fetchall()
+        selected_interest_ids = [
+            interest["interest_id"]
+            for interest in selected_interests]
 
-        return render_template("edit_profile.html", user=g.user)
+
+        return render_template("edit_profile.html", user=g.user, all_interests=all_interests, selected_interest_ids=selected_interest_ids)
 
     return app
