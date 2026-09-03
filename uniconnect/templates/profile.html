@@ -52,6 +52,59 @@
                 <a href="{{ url_for('edit_profile') }}" class="profile-edit-button">
                     Edit Profile
                 </a>
+            {% else %}
+
+                {% if relationship is none %}
+
+                    <form
+                        method="post"
+                        action="{{ url_for('send_friend_request', receiver_id=user['id']) }}"
+                    >
+                        <button type="submit" class="profile-add-friend">
+                            Add Friend
+                        </button>
+                    </form>
+
+                 {% elif relationship["status"] == "pending"
+                 and relationship["sender_id"] == g.user["id"] %}
+
+                    <button class="profile-add-friend" disabled>
+                        Request Sent
+                    </button>
+                
+                {% elif relationship["status"] == "pending"
+                and relationship["receiver_id"] == g.user["id"] %}
+
+                    <div class="profile-friend-actions">
+
+                        <form
+                            method="post"
+                            action="{{ url_for('accept_friend_request', request_id=relationship['id']) }}"
+                        >
+                            <button type="submit" class="profile-add-friend">
+                                Accept
+                            </button>
+                        </form>
+
+                        <form
+                            method="post"
+                            action="{{ url_for('reject_friend_request', request_id=relationship['id']) }}"
+                        >
+                            <button type="submit" class="profile-reject-friend">
+                                Reject
+                            </button>
+                        </form>
+
+                    </div>
+                
+                {% elif relationship["status"] == "accepted" %}
+
+                    <button class="profile-add-friend" disabled>
+                        Friends
+                    </button>
+
+                {% endif %}
+                    
             {% endif %}
 
         </section>
