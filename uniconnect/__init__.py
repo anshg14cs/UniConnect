@@ -145,10 +145,26 @@ def create_app():
             (g.user["id"],)
         ).fetchall()
 
+        connection_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM friend_requests
+            WHERE status = 'accepted'
+            AND (sender_id = ? OR receiver_id = ?)
+            """,
+            (
+                g.user["id"],
+                g.user["id"]
+            )
+        ).fetchone()
+
+        connection_count = connection_result["count"]
+
         return render_template(
             "profile.html",
             user=g.user,
-            interests=interests
+            interests=interests,
+            connection_count = connection_count
         )
 
     @app.route("/profile/edit", methods=["GET", "POST"])
@@ -255,6 +271,21 @@ def create_app():
             (user_id,)
         ).fetchall()
 
+        connection_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM friend_requests
+            WHERE status = 'accepted'
+            AND (sender_id = ? OR receiver_id = ?)
+            """,
+            (
+                user_id,
+                user_id
+            )
+        ).fetchone()
+
+        connection_count = connection_result["count"]
+
         relationship = db.execute(
             """
             SELECT *
@@ -276,7 +307,8 @@ def create_app():
             "profile.html",
             user=user,
             interests=interests,
-            relationship = relationship
+            relationship = relationship,
+            connection_count = connection_count
         )
 
     @app.route("/friend-request/<int:request_id>/accept", methods=["POST"])

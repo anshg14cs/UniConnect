@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{{ user["name"] }} | UniConnect</title>
+
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}"
@@ -16,98 +18,152 @@
 
         <section class="profile-header">
 
-            <div class="profile-avatar">
-                {{ user["name"][0] | upper }}
-            </div>
+            <div class="profile-header-main">
 
-            <div class="profile-header-info">
+                <div class="profile-avatar">
+                    {{ user["name"][0] | upper }}
+                </div>
 
-                <h1>{{ user["name"] }}</h1>
+                <div class="profile-header-info">
 
-                <p class="profile-university">
-                    {{ user["university"] }}
-                </p>
+                    <h1>{{ user["name"] }}</h1>
 
-                {% if user["course"] %}
-                    <p class="profile-course">
-                        {{ user["course"] }}
+                    <p class="profile-university">
+                        {{ user["university"] }}
                     </p>
+
+                    {% if user["course"] %}
+                        <p class="profile-course">
+                            {{ user["course"] }}
+                        </p>
+                    {% endif %}
+
+                    <div class="profile-details">
+
+                        {% if user["year_of_study"] %}
+                            <span>
+                                {{ user["year_of_study"] }}
+                            </span>
+                        {% endif %}
+
+                        {% if user["location"] %}
+                            <span>
+                                {{ user["location"] }}
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                {% if g.user and g.user["id"] == user["id"] %}
+
+                    <a
+                        href="{{ url_for('edit_profile') }}"
+                        class="profile-edit-button"
+                    >
+                        Edit Profile
+                    </a>
+
+                {% else %}
+
+                    {% if relationship is none %}
+
+                        <form
+                            method="post"
+                            action="{{ url_for('send_friend_request', receiver_id=user['id']) }}"
+                        >
+                            <button
+                                type="submit"
+                                class="profile-add-friend"
+                            >
+                                Add Friend
+                            </button>
+                        </form>
+
+
+                    {% elif relationship["status"] == "pending"
+                            and relationship["sender_id"] == g.user["id"] %}
+
+                        <button
+                            class="profile-add-friend"
+                            disabled
+                        >
+                            Request Sent
+                        </button>
+
+
+                    {% elif relationship["status"] == "pending"
+                            and relationship["receiver_id"] == g.user["id"] %}
+
+                        <div class="profile-friend-actions">
+
+                            <form
+                                method="post"
+                                action="{{ url_for('accept_friend_request', request_id=relationship['id']) }}"
+                            >
+                                <button
+                                    type="submit"
+                                    class="profile-add-friend"
+                                >
+                                    Accept
+                                </button>
+                            </form>
+
+                            <form
+                                method="post"
+                                action="{{ url_for('reject_friend_request', request_id=relationship['id']) }}"
+                            >
+                                <button
+                                    type="submit"
+                                    class="profile-reject-friend"
+                                >
+                                    Reject
+                                </button>
+                            </form>
+
+                        </div>
+
+
+                    {% elif relationship["status"] == "accepted" %}
+
+                        <button
+                            class="profile-add-friend"
+                            disabled
+                        >
+                            Friends
+                        </button>
+
+                    {% endif %}
+
                 {% endif %}
 
-                <div class="profile-details">
+            </div>
 
-                    {% if user["year_of_study"] %}
-                        <span>{{ user["year_of_study"] }}</span>
-                    {% endif %}
 
-                    {% if user["location"] %}
-                        <span>{{ user["location"] }}</span>
-                    {% endif %}
+            <div class="profile-stats">
+
+                <div class="profile-stat">
+
+                    <strong>
+                        {{ connection_count }}
+                    </strong>
+
+                    <span>
+                        {% if connection_count == 1 %}
+                            Connection
+                        {% else %}
+                            Connections
+                        {% endif %}
+                    </span>
 
                 </div>
 
             </div>
 
-            {% if g.user and g.user["id"] == user["id"] %}
-                <a href="{{ url_for('edit_profile') }}" class="profile-edit-button">
-                    Edit Profile
-                </a>
-            {% else %}
-
-                {% if relationship is none %}
-
-                    <form
-                        method="post"
-                        action="{{ url_for('send_friend_request', receiver_id=user['id']) }}"
-                    >
-                        <button type="submit" class="profile-add-friend">
-                            Add Friend
-                        </button>
-                    </form>
-
-                 {% elif relationship["status"] == "pending"
-                 and relationship["sender_id"] == g.user["id"] %}
-
-                    <button class="profile-add-friend" disabled>
-                        Request Sent
-                    </button>
-                
-                {% elif relationship["status"] == "pending"
-                and relationship["receiver_id"] == g.user["id"] %}
-
-                    <div class="profile-friend-actions">
-
-                        <form
-                            method="post"
-                            action="{{ url_for('accept_friend_request', request_id=relationship['id']) }}"
-                        >
-                            <button type="submit" class="profile-add-friend">
-                                Accept
-                            </button>
-                        </form>
-
-                        <form
-                            method="post"
-                            action="{{ url_for('reject_friend_request', request_id=relationship['id']) }}"
-                        >
-                            <button type="submit" class="profile-reject-friend">
-                                Reject
-                            </button>
-                        </form>
-
-                    </div>
-                
-                {% elif relationship["status"] == "accepted" %}
-
-                    <button class="profile-add-friend" disabled>
-                        Friends
-                    </button>
-
-                {% endif %}
-                    
-            {% endif %}
-
         </section>
+
 
         <section class="profile-card profile-about">
 
@@ -116,14 +172,21 @@
             </div>
 
             {% if user["bio"] %}
-                <p>{{ user["bio"] }}</p>
+
+                <p>
+                    {{ user["bio"] }}
+                </p>
+
             {% else %}
+
                 <p class="profile-empty">
                     Tell other students a little about yourself.
                 </p>
+
             {% endif %}
 
         </section>
+
 
         <section class="profile-card">
 
@@ -134,11 +197,15 @@
             {% if interests %}
 
                 <div class="profile-interests">
+
                     {% for interest in interests %}
+
                         <span class="profile-interest">
                             {{ interest["name"] }}
                         </span>
+
                     {% endfor %}
+
                 </div>
 
             {% else %}
