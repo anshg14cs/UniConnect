@@ -241,10 +241,103 @@ def create_app():
             (user_id,)
         ).fetchall()
 
+        relationship = db.execute(
+            """
+            SELECT *
+            FROM friend_requests
+            WHERE
+                (sender_id = ? AND receiver_id = ?)
+                OR
+                (sender_id = ? AND receiver_id = ?)
+            """,
+            (
+                g.user["id"],
+                user_id,
+                user_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
         return render_template(
             "profile.html",
             user=user,
-            interests=interests
+            interests=interests,
+            relationship = relationship
+        )
+
+    @app.route("/friend-request/<int:request_id>/accept", methods=["POST"])
+    def accept_friend_request(request_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        friend_request = db.execute(
+            """
+            SELECT *
+            FROM friend_requests
+            WHERE id = ?
+            """,
+            (request_id,)
+        ).fetchone()
+
+        if friend_request is None:
+            abort(404)
+
+        if friend_request["receiver_id"] != g.user["id"]:
+            abort(403)
+
+        db.execute(
+            """
+            UPDATE friend_requests
+            SET status = 'accepted'
+            WHERE id = ?
+            """,
+            (request_id,)
+        )
+
+        db.commit()
+
+        return redirect(
+            url_for("user_profile", user_id=friend_request["sender_id"])
+        )
+
+    @app.route("/friend-request/<int:request_id>/reject", methods=["POST"])
+    def reject_friend_request(request_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        friend_request = db.execute(
+            """
+            SELECT *
+            FROM friend_requests
+            WHERE id = ?
+            """,
+            (request_id,)
+        ).fetchone()
+
+        if friend_request is None:
+            abort(404)
+
+        if friend_request["receiver_id"] != g.user["id"]:
+            abort(403)
+
+        db.execute(
+            """
+            DELETE FROM friend_requests
+            WHERE id = ?
+            """,
+            (request_id,)
+        )
+
+        db.commit()
+
+        return redirect(
+            url_for("user_profile", user_id=friend_request["sender_id"])
         )
     
     @app.route("/students")
@@ -304,5 +397,56 @@ def create_app():
             search = search
         )
 
+    @app.route("/friend-request/<int:receiver_id>", methods=["POST"])
+    def send_friend_request(receiver_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        if receiver_id == g.user["id"]:
+            return redirect(url_for("profile"))
+
+        db = get_db()
+
+        receiver = db.execute(
+            "SELECT * FROM users WHERE id = ?",
+            (receiver_id,)
+        ).fetchone()
+
+        if receiver is None:
+            abort(404)
+
+        existing_request = db.execute(
+            """
+            SELECT *
+            FROM friend_requests
+            WHERE
+                (sender_id = ? AND receiver_id = ?)
+                OR
+                (sender_id = ? AND receiver_id = ?)
+            """,
+            (
+                g.user["id"],
+                receiver_id,
+                receiver_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
+        if existing_request is None:
+            db.execute(
+                """
+                INSERT INTO friend_requests (sender_id, receiver_id)
+                VALUES (?, ?)
+                """,
+                (g.user["id"], receiver_id)
+            )
+
+            db.commit()
+
+        return redirect(url_for("user_profile", user_id=receiver_id))
+
     return app
+
+
 

@@ -3138,3 +3138,47 @@ body.students-page {
 
     color: var(--text-soft);
 }
+
+.profile-add-friend {
+
+    padding: 10px 18px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: var(--green);
+    color: white;
+
+    font-size: 0.9rem;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.profile-add-friend:hover {
+    background: var(--green-dark);
+}
+
+.profile-friend-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.profile-reject-friend {
+    padding: 10px 18px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: white;
+    color: #374151;
+
+    font-size: 0.9rem;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.profile-reject-friend:hover {
+    background: #f3f4f6;
+}

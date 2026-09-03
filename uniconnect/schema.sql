@@ -48,3 +48,17 @@ INSERT OR IGNORE INTO interests (name) VALUES
     ('Cooking'),
     ('Volunteering'),
     ('Entrepreneurship');
+
+CREATE TABLE IF NOT EXISTS friend_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    sender_id INTEGER NOT NULL,
+    receiver_id INTEGER NOT NULL,
+
+    status TEXT NOT NULL DEFAULT 'pending',
+
+    FOREIGN KEY (sender_id) REFERENCES users (id),
+    FOREIGN KEY (receiver_id) REFERENCES users (id),
+
+    UNIQUE (sender_id, receiver_id)
+);
