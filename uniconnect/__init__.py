@@ -25,12 +25,26 @@ def create_app():
 
         if user_id is None:
             g.user = None
+            g.notification_count = 0
 
         else:
+            db = get_db()
             g.user = get_db().execute(
                 "SELECT * FROM users WHERE id = ?",
                 (user_id,)
             ).fetchone()
+
+            result = db.execute(
+                """
+                SELECT COUNT(*) AS count
+                FROM friend_requests
+                WHERE receiver_id = ?
+                AND status = 'pending'
+                """,
+                (user_id,)
+            ).fetchone()
+
+            g.notification_count = result["count"]
 
     @app.route("/")
     def home():
@@ -445,6 +459,40 @@ def create_app():
             db.commit()
 
         return redirect(url_for("user_profile", user_id=receiver_id))
+
+    @app.route("/notifications")
+    def notifications():
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        friend_requests = db.execute(
+            """
+            SELECT
+                friend_requests.id AS request_id,
+                users.id AS user_id,
+                users.name,
+                users.university
+
+            FROM friend_requests
+
+            JOIN users
+                ON friend_requests.sender_id = users.id
+
+            WHERE friend_requests.receiver_id = ?
+            AND friend_requests.status = 'pending'
+
+            ORDER BY friend_requests.id DESC
+            """,
+            (g.user["id"],)
+        ).fetchall()
+
+        return render_template(
+            "notifications.html",
+            friend_requests=friend_requests
+        )
 
     return app
 

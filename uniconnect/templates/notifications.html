@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | UniConnect</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="notifications-page">
+
+    <main class="notifications-container">
+
+        <h1>Notifications</h1>
+
+        {% if friend_requests %}
+
+            {% for friend_request in friend_requests %}
+
+                <div class="notification-card">
+
+                    <div class="notification-avatar">
+                        {{ friend_request["name"][0] | upper }}
+                    </div>
+
+                    <div class="notification-info">
+
+                        <p>
+                            <strong>{{ friend_request["name"] }}</strong>
+                            sent you a friend request.
+                        </p>
+
+                        <span>
+                            {{ friend_request["university"] }}
+                        </span>
+
+                    </div>
+
+                    <div class="notification-actions">
+
+                        <a href="{{ url_for('user_profile', user_id=friend_request['user_id']) }}">
+                            View Profile
+                        </a>
+
+                        <form
+                            method="post"
+                            action="{{ url_for('accept_friend_request', request_id=friend_request['request_id']) }}"
+                        >
+                            <button type="submit">
+                                Accept
+                            </button>
+                        </form>
+
+                        <form
+                            method="post"
+                            action="{{ url_for('reject_friend_request', request_id=friend_request['request_id']) }}"
+                        >
+                            <button type="submit">
+                                Reject
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="notifications-empty">
+                <p>You have no new notifications.</p>
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+
+</html>
