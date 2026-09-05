@@ -673,7 +673,7 @@ def create_app():
 
         db.commit()
 
-        return redirect(url_for("profile"))
+        return redirect(url_for("feed"))
     @app.template_filter("time_ago")
     def time_ago(timestamp):
 
@@ -721,6 +721,65 @@ def create_app():
             return "1 week ago"
 
         return f"{weeks} weeks ago"
+    @app.route("/feed")
+    def feed():
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        posts = db.execute(
+            """
+            SELECT
+                posts.id,
+                posts.content,
+                posts.created_at,
+                users.id AS user_id,
+                users.name,
+                users.university
+
+            FROM posts
+
+            JOIN users
+                ON posts.user_id = users.id
+
+            WHERE posts.user_id = ?
+
+            OR EXISTS (
+                SELECT 1
+                FROM friend_requests
+
+                WHERE friend_requests.status = 'accepted'
+
+                AND (
+                    (
+                        friend_requests.sender_id = ?
+                        AND friend_requests.receiver_id = posts.user_id
+                    )
+
+                    OR
+
+                    (
+                        friend_requests.receiver_id = ?
+                        AND friend_requests.sender_id = posts.user_id
+                    )
+                )
+            )
+
+            ORDER BY posts.created_at DESC
+            """,
+            (
+                g.user["id"],
+                g.user["id"],
+                g.user["id"]
+            )
+        ).fetchall()
+
+        return render_template(
+            "feed.html",
+            posts=posts
+        )
 
     return app
 

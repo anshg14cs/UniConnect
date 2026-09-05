@@ -240,36 +240,6 @@
 
         </section>
 
-        {% if g.user and g.user["id"] == user["id"] %}
-
-        <section class="profile-card">
-
-            <div class="profile-card-heading">
-                <h2>Create Post</h2>
-            </div>
-
-            <form
-                method="post"
-                action="{{ url_for('create_post') }}"
-                class="create-post-form"
-            >
-
-                <textarea
-                    name="content"
-                    placeholder="Share something with other students..."
-                    required
-                ></textarea>
-
-                <button type="submit">
-                    Post
-                </button>
-
-            </form>
-
-        </section>
-
-        {% endif %}
-
         <section class="profile-card">
 
             <div class="profile-card-heading">

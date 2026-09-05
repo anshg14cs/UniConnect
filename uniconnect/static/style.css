@@ -3755,6 +3755,293 @@ body.connections-page {
 }
 
 /* ================================
+   FEED PAGE
+================================ */
+
+body.feed-page {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f6faf7;
+    color: var(--text);
+}
+
+
+.feed-container {
+    width: min(800px, 92%);
+
+    margin: 0 auto;
+
+    padding: 45px 0 70px;
+}
+
+
+.feed-header {
+    margin-bottom: 26px;
+}
+
+
+.feed-header h1 {
+    margin: 0 0 6px;
+
+    font-size: 2rem;
+
+    color: #111827;
+}
+
+
+.feed-header p {
+    margin: 0;
+
+    color: var(--text-soft);
+}
+
+
+/* ================================
+   FEED POSTS
+================================ */
+
+.feed-posts {
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+
+.feed-post {
+    padding: 20px 22px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+}
+
+
+.feed-post-header {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.feed-post-avatar {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: var(--green-light);
+    color: var(--green-dark);
+
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+
+.feed-post-user {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+
+.feed-post-name {
+    color: #111827;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+
+.feed-post-name:hover {
+    color: var(--green);
+}
+
+
+.feed-post-user span {
+    margin-top: 2px;
+
+    color: var(--text-soft);
+
+    font-size: 0.82rem;
+}
+
+
+.feed-post-time {
+    margin-left: auto;
+
+    flex-shrink: 0;
+
+    color: var(--text-soft);
+
+    font-size: 0.8rem;
+}
+
+
+.feed-post-content {
+    margin: 0px 0 0 62px;
+
+    color: #374151;
+
+    line-height: 1.6;
+}
+
+
+/* ================================
+   EMPTY FEED
+================================ */
+
+.feed-empty {
+    padding: 45px 25px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+}
+
+
+.feed-empty h2 {
+    margin: 0 0 8px;
+
+    color: #111827;
+
+    font-size: 1.2rem;
+}
+
+
+.feed-empty p {
+    margin: 0;
+
+    color: var(--text-soft);
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 650px) {
+
+    .feed-post {
+        padding: 18px;
+    }
+
+    .feed-post-header {
+        align-items: flex-start;
+    }
+
+    .feed-post-time {
+        margin-left: 0;
+    }
+
+    .feed-post-content {
+        margin-left: 0;
+    }
+}
+
+/* ================================
+   FEED CREATE POST
+================================ */
+
+.feed-create-post {
+    margin-bottom: 20px;
+
+    padding: 20px 22px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+}
+
+
+.feed-create-post-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.feed-create-post-form textarea {
+    width: 100%;
+    min-height: 90px;
+
+    padding: 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    font: inherit;
+
+    resize: vertical;
+    outline: none;
+}
+
+
+.feed-create-post-form textarea:focus {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(25, 135, 84, 0.11);
+}
+
+
+.feed-create-post-form button {
+    align-self: flex-end;
+
+    padding: 10px 20px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: var(--green);
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.feed-create-post-form button:hover {
+    background: var(--green-dark);
+}
+
+/* ================================
    RESPONSIVE
 ================================ */
 

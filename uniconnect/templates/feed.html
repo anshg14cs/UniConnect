@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Feed | UniConnect</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body class="feed-page">
+
+    <main class="feed-container">
+
+        <div class="feed-header">
+            <h1>Feed</h1>
+            <p>See what you and your connections are sharing.</p>
+        </div>
+
+        <section class="feed-create-post">
+
+            <form
+                method="post"
+                action="{{ url_for('create_post') }}"
+                class="feed-create-post-form"
+            >
+
+                <textarea
+                    name="content"
+                    placeholder="Share something with other students..."
+                    required
+                ></textarea>
+
+                <button type="submit">
+                    Post
+                </button>
+
+            </form>
+
+        </section>
+
+
+        {% if posts %}
+
+            <div class="feed-posts">
+
+                {% for post in posts %}
+
+                    <article class="feed-post">
+
+                        <div class="feed-post-header">
+
+                            <div class="feed-post-avatar">
+                                {{ post["name"][0] | upper }}
+                            </div>
+
+                            <div class="feed-post-user">
+
+                                <a
+                                    href="{{ url_for('user_profile', user_id=post['user_id']) }}"
+                                    class="feed-post-name"
+                                >
+                                    {{ post["name"] }}
+                                </a>
+
+                                <span>
+                                    {{ post["university"] }}
+                                </span>
+
+                            </div>
+
+                            <span class="feed-post-time">
+                                {{ post["created_at"] | time_ago }}
+                            </span>
+
+                        </div>
+
+
+                        <p class="feed-post-content">
+                            {{ post["content"] }}
+                        </p>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="feed-empty">
+
+                <h2>No posts yet</h2>
+
+                <p>
+                    Posts from you and your connections will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+</html>
