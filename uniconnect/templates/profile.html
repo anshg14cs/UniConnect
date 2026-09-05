@@ -166,6 +166,22 @@
                     </div>
                 </a>
 
+                <div class="profile-stat">
+
+                    <strong>
+                        {{ post_count }}
+                    </strong>
+
+                    <span>
+                        {% if post_count == 1 %}
+                            Post
+                        {% else %}
+                            Posts
+                        {% endif %}
+                    </span>
+
+                </div>
+
             </div>
 
         </section>
@@ -218,6 +234,74 @@
 
                 <p class="profile-empty">
                     No interests added yet.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+        {% if g.user and g.user["id"] == user["id"] %}
+
+        <section class="profile-card">
+
+            <div class="profile-card-heading">
+                <h2>Create Post</h2>
+            </div>
+
+            <form
+                method="post"
+                action="{{ url_for('create_post') }}"
+                class="create-post-form"
+            >
+
+                <textarea
+                    name="content"
+                    placeholder="Share something with other students..."
+                    required
+                ></textarea>
+
+                <button type="submit">
+                    Post
+                </button>
+
+            </form>
+
+        </section>
+
+        {% endif %}
+
+        <section class="profile-card">
+
+            <div class="profile-card-heading">
+                <h2>Recent Activity</h2>
+            </div>
+
+            {% if posts %}
+
+                <div class="profile-posts">
+
+                    {% for post in posts %}
+
+                        <article class="profile-post">
+
+                            <p>
+                                {{ post["content"] }}
+                            </p>
+
+                            <span class="profile-post-time">
+                                {{ post["created_at"] | time_ago }}
+                            </span>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="profile-empty">
+                    No posts yet.
                 </p>
 
             {% endif %}

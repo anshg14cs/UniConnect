@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, g
 from .universities import UK_UNIVERSITIES
 from werkzeug.security import generate_password_hash, check_password_hash
 from .db import get_db
+from datetime import datetime, timezone
 
 def create_app():
     app = Flask(__name__)
@@ -160,11 +161,40 @@ def create_app():
 
         connection_count = connection_result["count"]
 
+        posts = db.execute(
+            """
+            SELECT
+                posts.id,
+                posts.content,
+                posts.created_at
+
+            FROM posts
+
+            WHERE posts.user_id = ?
+
+            ORDER BY posts.created_at DESC
+            """,
+            (g.user["id"],)
+        ).fetchall()
+
+        post_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM posts
+            WHERE user_id = ?
+            """,
+            (g.user["id"],)
+        ).fetchone()
+
+        post_count = post_result["count"]
+
         return render_template(
             "profile.html",
             user=g.user,
             interests=interests,
-            connection_count = connection_count
+            connection_count = connection_count,
+            posts = posts,
+            post_count = post_count
         )
 
     @app.route("/profile/edit", methods=["GET", "POST"])
@@ -303,12 +333,41 @@ def create_app():
             )
         ).fetchone()
 
+        posts = db.execute(
+            """
+            SELECT
+                posts.id,
+                posts.content,
+                posts.created_at
+
+            FROM posts
+
+            WHERE posts.user_id = ?
+
+            ORDER BY posts.created_at DESC
+            """,
+            (user_id,)
+        ).fetchall()
+
+        post_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM posts
+            WHERE user_id = ?
+            """,
+            (user_id,)
+        ).fetchone()
+
+        post_count = post_result["count"]
+
         return render_template(
             "profile.html",
             user=user,
             interests=interests,
             relationship = relationship,
-            connection_count = connection_count
+            connection_count = connection_count,
+            posts = posts,
+            post_count = post_count
         )
 
     @app.route("/friend-request/<int:request_id>/accept", methods=["POST"])
@@ -590,6 +649,78 @@ def create_app():
             user=user,
             connections=connections
         )
+
+    @app.route("/posts/create", methods=["POST"])
+    def create_post():
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        content = request.form["content"].strip()
+
+        if not content:
+            return redirect(url_for("profile"))
+
+        db = get_db()
+
+        db.execute(
+            """
+            INSERT INTO posts (user_id, content)
+            VALUES (?, ?)
+            """,
+            (g.user["id"], content)
+        )
+
+        db.commit()
+
+        return redirect(url_for("profile"))
+    @app.template_filter("time_ago")
+    def time_ago(timestamp):
+
+        posted_time = datetime.strptime(
+            timestamp,
+            "%Y-%m-%d %H:%M:%S"
+        ).replace(tzinfo=timezone.utc)
+
+        current_time = datetime.now(timezone.utc)
+
+        difference = current_time - posted_time
+
+        seconds = int(difference.total_seconds())
+
+        if seconds < 60:
+            return "Just now"
+
+        minutes = seconds // 60
+
+        if minutes < 60:
+            if minutes == 1:
+                return "1 minute ago"
+
+            return f"{minutes} minutes ago"
+
+        hours = minutes // 60
+
+        if hours < 24:
+            if hours == 1:
+                return "1 hour ago"
+
+            return f"{hours} hours ago"
+
+        days = hours // 24
+
+        if days == 1:
+            return "Yesterday"
+
+        if days < 7:
+            return f"{days} days ago"
+
+        weeks = days // 7
+
+        if weeks == 1:
+            return "1 week ago"
+
+        return f"{weeks} weeks ago"
 
     return app
 
