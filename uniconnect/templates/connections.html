@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ user["name"] }}'s Connections | UniConnect</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body class="connections-page">
+
+    <main class="connections-container">
+
+        <div class="connections-header">
+
+            <a
+                href="{{ url_for('user_profile', user_id=user['id']) }}"
+                class="connections-back"
+            >
+                ← Back to Profile
+            </a>
+
+            <h1>Connections</h1>
+
+            <p>
+                {{ user["name"] }}'s connections
+            </p>
+
+        </div>
+
+
+        {% if connections %}
+
+            <div class="connections-list">
+
+                {% for connection in connections %}
+
+                    <a
+                        href="{{ url_for('user_profile', user_id=connection['id']) }}"
+                        class="connection-card"
+                    >
+
+                        <div class="connection-avatar">
+                            {{ connection["name"][0] | upper }}
+                        </div>
+
+
+                        <div class="connection-info">
+
+                            <h2>
+                                {{ connection["name"] }}
+                            </h2>
+
+                            <p>
+                                {{ connection["university"] }}
+                            </p>
+
+                            {% if connection["course"] %}
+
+                                <span>
+                                    {{ connection["course"] }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="connection-view">
+                            View Profile →
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="connections-empty">
+
+                <h2>No connections yet</h2>
+
+                <p>
+                    This user hasn't connected with anyone yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

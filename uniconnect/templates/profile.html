@@ -144,21 +144,27 @@
 
             <div class="profile-stats">
 
-                <div class="profile-stat">
+                <a
+                    href="{{ url_for('user_connections', user_id=user['id']) }}"
+                    class="profile-stat-link"
+                >
 
-                    <strong>
-                        {{ connection_count }}
-                    </strong>
+                    <div class="profile-stat">
 
-                    <span>
-                        {% if connection_count == 1 %}
-                            Connection
-                        {% else %}
-                            Connections
-                        {% endif %}
-                    </span>
+                        <strong>
+                            {{ connection_count }}
+                        </strong>
 
-                </div>
+                        <span>
+                            {% if connection_count == 1 %}
+                                Connection
+                            {% else %}
+                                Connections
+                            {% endif %}
+                        </span>
+
+                    </div>
+                </a>
 
             </div>
 

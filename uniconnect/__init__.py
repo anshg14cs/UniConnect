@@ -526,6 +526,71 @@ def create_app():
             friend_requests=friend_requests
         )
 
+    @app.route("/users/<int:user_id>/connections")
+    def user_connections(user_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        user = db.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,)
+        ).fetchone()
+
+        if user is None:
+            abort(404)
+
+        connections = db.execute(
+            """
+            SELECT
+                users.id,
+                users.name,
+                users.university,
+                users.course
+
+            FROM friend_requests
+
+            JOIN users
+                ON friend_requests.receiver_id = users.id
+
+            WHERE friend_requests.sender_id = ?
+            AND friend_requests.status = 'accepted'
+
+
+            UNION
+
+
+            SELECT
+                users.id,
+                users.name,
+                users.university,
+                users.course
+
+            FROM friend_requests
+
+            JOIN users
+                ON friend_requests.sender_id = users.id
+
+            WHERE friend_requests.receiver_id = ?
+            AND friend_requests.status = 'accepted'
+
+            ORDER BY name
+            """,
+            (user_id, user_id)
+        ).fetchall()
+
+        return render_template(
+            "connections.html",
+            user=user,
+            connections=connections
+        )
+
     return app
 
 
