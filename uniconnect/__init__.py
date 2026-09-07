@@ -735,9 +735,23 @@ def create_app():
                 posts.id,
                 posts.content,
                 posts.created_at,
+
                 users.id AS user_id,
                 users.name,
-                users.university
+                users.university,
+
+                (
+                    SELECT COUNT(*)
+                    FROM post_likes
+                    WHERE post_likes.post_id = posts.id
+                ) AS like_count,
+
+                EXISTS (
+                    SELECT 1
+                    FROM post_likes
+                    WHERE post_likes.post_id = posts.id
+                    AND post_likes.user_id = ?
+                ) AS liked_by_user
 
             FROM posts
 
@@ -772,14 +786,71 @@ def create_app():
             (
                 g.user["id"],
                 g.user["id"],
+                g.user["id"],
                 g.user["id"]
             )
         ).fetchall()
+         
 
         return render_template(
             "feed.html",
             posts=posts
         )
+
+    @app.route("/posts/<int:post_id>/like", methods=["POST"])
+    def toggle_like(post_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        post = db.execute(
+            """
+            SELECT *
+            FROM posts
+            WHERE id = ?
+            """,
+            (post_id,)
+        ).fetchone()
+
+        if post is None:
+            abort(404)
+
+        existing_like = db.execute(
+            """
+            SELECT *
+            FROM post_likes
+            WHERE user_id = ?
+            AND post_id = ?
+            """,
+            (g.user["id"], post_id)
+        ).fetchone()
+
+        if existing_like is None:
+
+            db.execute(
+                """
+                INSERT INTO post_likes (user_id, post_id)
+                VALUES (?, ?)
+                """,
+                (g.user["id"], post_id)
+            )
+
+        else:
+
+            db.execute(
+                """
+                DELETE FROM post_likes
+                WHERE user_id = ?
+                AND post_id = ?
+                """,
+                (g.user["id"], post_id)
+            )
+
+        db.commit()
+
+        return redirect(url_for("feed"))
 
     return app
 

@@ -84,6 +84,42 @@
                             {{ post["content"] }}
                         </p>
 
+                            <div class="feed-post-actions">
+
+                                <form
+                                    method="post"
+                                    action="{{ url_for('toggle_like', post_id=post['id']) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="feed-like-button {% if post['liked_by_user'] %}liked{% endif %}"
+                                        aria-label="{% if post['liked_by_user'] %}Unlike post{% else %}Like post{% endif %}"
+                                    >
+                                        {% if post["liked_by_user"] %}
+                                            ♥
+                                        {% else %}
+                                            ♡
+                                        {% endif %}
+                                    </button>
+
+                                </form>
+
+
+                                <span class="feed-like-count">
+
+                                    {{ post["like_count"] }}
+
+                                    {% if post["like_count"] == 1 %}
+                                        Like
+                                    {% else %}
+                                        Likes
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
                     </article>
 
                 {% endfor %}

@@ -4042,6 +4042,63 @@ body.feed-page {
 }
 
 /* ================================
+   FEED POST ACTIONS
+================================ */
+
+.feed-post-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 14px 0 0 62px;
+}
+
+
+.feed-post-actions form {
+    margin: 0;
+}
+
+
+.feed-like-button {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+    color: var(--text-soft);
+
+    font-size: 1.35rem;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.feed-like-button:hover {
+    color: var(--green);
+}
+
+.feed-like-button.liked {
+    color: var(--green);
+}
+
+
+.feed-like-count {
+    color: var(--text-soft);
+
+    font-size: 0.8rem;
+}
+
+/* ================================
    RESPONSIVE
 ================================ */
 
