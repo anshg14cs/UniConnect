@@ -790,11 +790,55 @@ def create_app():
                 g.user["id"]
             )
         ).fetchall()
+
+        comments_by_post = {}
+
+        if posts:
+
+            post_ids = [post["id"] for post in posts]
+
+            placeholders = ",".join(
+                "?" for post_id in post_ids
+            )
+
+            comments = db.execute(
+                f"""
+                SELECT
+                    comments.id,
+                    comments.post_id,
+                    comments.content,
+                    comments.created_at,
+
+                    users.id AS user_id,
+                    users.name
+
+                FROM comments
+
+                JOIN users
+                    ON comments.user_id = users.id
+
+                WHERE comments.post_id IN ({placeholders})
+
+                ORDER BY comments.created_at ASC
+                """,
+                post_ids
+            ).fetchall()
+
+
+            for comment in comments:
+
+                post_id = comment["post_id"]
+
+                if post_id not in comments_by_post:
+                    comments_by_post[post_id] = []
+
+                comments_by_post[post_id].append(comment)
          
 
         return render_template(
             "feed.html",
-            posts=posts
+            posts=posts,
+            comments_by_post=comments_by_post
         )
 
     @app.route("/posts/<int:post_id>/like", methods=["POST"])
@@ -849,6 +893,46 @@ def create_app():
             )
 
         db.commit()
+
+        return redirect(url_for("feed"))
+
+    @app.route("/posts/<int:post_id>/comments/create", methods=["POST"])
+    def create_comment(post_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        post = db.execute(
+            """
+            SELECT *
+            FROM posts
+            WHERE id = ?
+            """,
+            (post_id,)
+        ).fetchone()
+
+        if post is None:
+            abort(404)
+
+        content = request.form["content"].strip()
+
+        if content:
+
+            db.execute(
+                """
+                INSERT INTO comments (post_id, user_id, content)
+                VALUES (?, ?, ?)
+                """,
+                (
+                    post_id,
+                    g.user["id"],
+                    content
+                )
+            )
+
+            db.commit()
 
         return redirect(url_for("feed"))
 

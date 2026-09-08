@@ -120,6 +120,75 @@
 
                             </div>
 
+                            <div class="feed-comments">
+
+                                {% set post_comments = comments_by_post.get(post["id"], []) %}
+
+                                {% if post_comments %}
+
+                                    <div class="feed-comments-list">
+
+                                        {% for comment in post_comments %}
+
+                                            <div class="feed-comment">
+
+                                                <div class="feed-comment-avatar">
+                                                    {{ comment["name"][0] | upper }}
+                                                </div>
+
+                                                <div class="feed-comment-content">
+
+                                                    <div class="feed-comment-header">
+
+                                                        <a
+                                                            href="{{ url_for('user_profile', user_id=comment['user_id']) }}"
+                                                            class="feed-comment-name"
+                                                        >
+                                                            {{ comment["name"] }}
+                                                        </a>
+
+                                                        <span class="feed-comment-time">
+                                                            {{ comment["created_at"] | time_ago }}
+                                                        </span>
+
+                                                    </div>
+
+                                                    <p>
+                                                        {{ comment["content"] }}
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <form
+                                    method="post"
+                                    action="{{ url_for('create_comment', post_id=post['id']) }}"
+                                    class="feed-comment-form"
+                                >
+
+                                    <input
+                                        type="text"
+                                        name="content"
+                                        placeholder="Write a comment..."
+                                        required
+                                    >
+
+                                    <button type="submit">
+                                        Comment
+                                    </button>
+
+                                </form>
+
+                            </div>
+
                     </article>
 
                 {% endfor %}

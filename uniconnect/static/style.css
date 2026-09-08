@@ -4099,6 +4099,167 @@ body.feed-page {
 }
 
 /* ================================
+   FEED COMMENTS
+================================ */
+
+.feed-comments {
+    margin: 16px 0 0 62px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+.feed-comments-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    margin-bottom: 14px;
+}
+
+
+.feed-comment {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+}
+
+
+.feed-comment-avatar {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: var(--green-light);
+    color: var(--green-dark);
+
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+
+.feed-comment-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.feed-comment-header {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.feed-comment-name {
+    color: #111827;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+
+.feed-comment-name:hover {
+    color: var(--green);
+}
+
+
+.feed-comment-time {
+    color: var(--text-soft);
+
+    font-size: 0.72rem;
+}
+
+
+.feed-comment-content p {
+    margin: 4px 0 0;
+
+    color: #4b5563;
+
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+
+/* COMMENT INPUT */
+
+.feed-comment-form {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.feed-comment-form input {
+    flex: 1;
+
+    padding: 10px 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    font: inherit;
+    font-size: 0.85rem;
+
+    outline: none;
+}
+
+
+.feed-comment-form input:focus {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(25, 135, 84, 0.10);
+}
+
+
+.feed-comment-form button {
+    padding: 10px 14px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: var(--green);
+    color: white;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.feed-comment-form button:hover {
+    background: var(--green-dark);
+}
+
+
+@media (max-width: 650px) {
+
+    .feed-comments {
+        margin-left: 0;
+    }
+
+}
+
+/* ================================
    RESPONSIVE
 ================================ */
 
