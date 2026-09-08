@@ -73,9 +73,49 @@
 
                             </div>
 
-                            <span class="feed-post-time">
-                                {{ post["created_at"] | time_ago }}
-                            </span>
+                            <div class="feed-post-header-actions">
+
+                                <span class="feed-post-time">
+                                    {{ post["created_at"] | time_ago }}
+                                </span>
+
+                                {% if post["user_id"] == g.user["id"] %}
+
+                                    <form
+                                        method="post"
+                                        action="{{ url_for('delete_post', post_id=post['id']) }}"
+                                        class="feed-delete-form"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="feed-delete-button"
+                                        >
+
+                                            <svg
+                                                class="feed-delete-icon"
+                                                viewBox="0 0 24 24"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+
+                                {% endif %}
+
+                            </div>
 
                         </div>
 

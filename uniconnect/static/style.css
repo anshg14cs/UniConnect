@@ -4041,6 +4041,69 @@ body.feed-page {
     background: var(--green-dark);
 }
 
+.feed-post-header-actions {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    flex-shrink: 0;
+}
+
+
+.feed-post-time {
+    color: var(--text-soft);
+
+    font-size: 0.8rem;
+
+    white-space: nowrap;
+
+    position: relative;
+
+    top: -2px;
+}
+
+
+.feed-delete-form {
+    margin: 0;
+}
+
+
+.feed-delete-button {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+    color: #9ca3af;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+
+.feed-delete-icon {
+    width: 15px;
+    height: 15px;
+
+    flex-shrink: 0;
+}
+
+
+.feed-delete-button:hover {
+    color: #dc2626;
+}
 /* ================================
    FEED POST ACTIONS
 ================================ */

@@ -935,6 +935,57 @@ def create_app():
             db.commit()
 
         return redirect(url_for("feed"))
+    
+    @app.route("/posts/<int:post_id>/delete", methods=["POST"])
+    def delete_post(post_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        post = db.execute(
+            """
+            SELECT *
+            FROM posts
+            WHERE id = ?
+            """,
+            (post_id,)
+        ).fetchone()
+
+        if post is None:
+            abort(404)
+
+        if post["user_id"] != g.user["id"]:
+            abort(403)
+
+        db.execute(
+            """
+            DELETE FROM post_likes
+            WHERE post_id = ?
+            """,
+            (post_id,)
+        )
+
+        db.execute(
+            """
+            DELETE FROM comments
+            WHERE post_id = ?
+            """,
+            (post_id,)
+        )
+
+        db.execute(
+            """
+            DELETE FROM posts
+            WHERE id = ?
+            """,
+            (post_id,)
+        )
+
+        db.commit()
+
+        return redirect(url_for("feed"))
 
     return app
 
