@@ -4322,6 +4322,45 @@ body.feed-page {
 
 }
 
+.feed-comment-header {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.feed-comment-delete-form {
+    margin: 0;
+}
+
+
+.feed-comment-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+    color: #9ca3af;
+
+    cursor: pointer;
+}
+
+
+.feed-comment-delete-icon {
+    width: 13px;
+    height: 13px;
+}
+
+
+.feed-comment-delete-button:hover {
+    color: #dc2626;
+}
+
 /* ================================
    RESPONSIVE
 ================================ */

@@ -987,6 +987,41 @@ def create_app():
 
         return redirect(url_for("feed"))
 
+    @app.route("/comments/<int:comment_id>/delete", methods=["POST"])
+    def delete_comment(comment_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        comment = db.execute(
+            """
+            SELECT *
+            FROM comments
+            WHERE id = ?
+            """,
+            (comment_id,)
+        ).fetchone()
+
+        if comment is None:
+            abort(404)
+
+        if comment["user_id"] != g.user["id"]:
+            abort(403)
+
+        db.execute(
+            """
+            DELETE FROM comments
+            WHERE id = ?
+            """,
+            (comment_id,)
+        )
+
+        db.commit()
+
+        return redirect(url_for("feed"))
+
     return app
 
 
