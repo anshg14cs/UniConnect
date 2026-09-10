@@ -27,6 +27,7 @@ def create_app():
         if user_id is None:
             g.user = None
             g.notification_count = 0
+            g.message_count = 0
 
         else:
             db = get_db()
@@ -54,6 +55,33 @@ def create_app():
                 """,
                 (user_id,)
             ).fetchone()
+
+            message_result = db.execute(
+                """
+                SELECT COUNT(*) AS count
+
+                FROM messages
+
+                JOIN conversation_members
+                    ON messages.conversation_id =
+                    conversation_members.conversation_id
+
+                WHERE conversation_members.user_id = ?
+
+                AND messages.sender_id != ?
+
+                AND messages.id > COALESCE(
+                    conversation_members.last_read_message_id,
+                    0
+                )
+                """,
+                (
+                    user_id,
+                    user_id
+                )
+            ).fetchone()
+
+            g.message_count = message_result["count"]
 
             g.notification_count = (friend_request_result["count"] + social_notification_result["count"])
 
@@ -1206,6 +1234,430 @@ def create_app():
 
         return redirect(url_for("feed"))
 
+    @app.route("/messages/start/<int:user_id>", methods=["POST"])
+    def start_conversation(user_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        if user_id == g.user["id"]:
+            abort(400)
+
+        db = get_db()
+
+
+        # Check that the other user exists
+        other_user = db.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,)
+        ).fetchone()
+
+        if other_user is None:
+            abort(404)
+
+
+        # Users must be accepted connections
+        friendship = db.execute(
+            """
+            SELECT *
+            FROM friend_requests
+            WHERE status = 'accepted'
+            AND (
+                (sender_id = ? AND receiver_id = ?)
+                OR
+                (sender_id = ? AND receiver_id = ?)
+            )
+            """,
+            (
+                g.user["id"],
+                user_id,
+                user_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
+        if friendship is None:
+            abort(403)
+
+
+        # Look for an existing 1-to-1 conversation
+        conversation = db.execute(
+            """
+            SELECT conversations.id
+
+            FROM conversations
+
+            JOIN conversation_members AS member_one
+                ON conversations.id = member_one.conversation_id
+
+            JOIN conversation_members AS member_two
+                ON conversations.id = member_two.conversation_id
+
+            WHERE member_one.user_id = ?
+            AND member_two.user_id = ?
+
+            AND (
+                SELECT COUNT(*)
+                FROM conversation_members
+                WHERE conversation_id = conversations.id
+            ) = 2
+
+            LIMIT 1
+            """,
+            (
+                g.user["id"],
+                user_id
+            )
+        ).fetchone()
+
+
+        if conversation is None:
+
+            cursor = db.execute(
+                """
+                INSERT INTO conversations DEFAULT VALUES
+                """
+            )
+
+            conversation_id = cursor.lastrowid
+
+            db.execute(
+                """
+                INSERT INTO conversation_members (
+                    conversation_id,
+                    user_id
+                )
+                VALUES (?, ?)
+                """,
+                (
+                    conversation_id,
+                    g.user["id"]
+                )
+            )
+
+            db.execute(
+                """
+                INSERT INTO conversation_members (
+                    conversation_id,
+                    user_id
+                )
+                VALUES (?, ?)
+                """,
+                (
+                    conversation_id,
+                    user_id
+                )
+            )
+
+            db.commit()
+
+        else:
+
+            conversation_id = conversation["id"]
+
+
+        return redirect(
+            url_for(
+                "conversation",
+                conversation_id=conversation_id
+            )
+        )
+
+    @app.route("/messages/<int:conversation_id>")
+    def conversation(conversation_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+
+        # Make sure the logged-in user belongs to this conversation
+        membership = db.execute(
+            """
+            SELECT *
+            FROM conversation_members
+            WHERE conversation_id = ?
+            AND user_id = ?
+            """,
+            (
+                conversation_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
+        if membership is None:
+            abort(403)
+
+
+        # Get the other person in the conversation
+        other_user = db.execute(
+            """
+            SELECT users.*
+
+            FROM conversation_members
+
+            JOIN users
+                ON conversation_members.user_id = users.id
+
+            WHERE conversation_members.conversation_id = ?
+            AND conversation_members.user_id != ?
+            """,
+            (
+                conversation_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
+        if other_user is None:
+            abort(404)
+
+
+        # Load all messages in chronological order
+        messages = db.execute(
+            """
+            SELECT
+                messages.id,
+                messages.content,
+                messages.created_at,
+                messages.sender_id,
+                users.name AS sender_name
+
+            FROM messages
+
+            JOIN users
+                ON messages.sender_id = users.id
+
+            WHERE messages.conversation_id = ?
+
+            ORDER BY messages.created_at ASC
+            """,
+            (conversation_id,)
+        ).fetchall()
+
+        if messages:
+
+            latest_message_id = messages[-1]["id"]
+
+            db.execute(
+                """
+                UPDATE conversation_members
+                SET last_read_message_id = ?
+                WHERE conversation_id = ?
+                AND user_id = ?
+                """,
+                (
+                    latest_message_id,
+                    conversation_id,
+                    g.user["id"]
+                )
+            )
+
+            db.commit()
+
+
+        return render_template(
+            "conversation.html",
+            conversation_id=conversation_id,
+            other_user=other_user,
+            messages=messages
+        )
+
+    @app.route("/messages/<int:conversation_id>/send", methods=["POST"])
+    def send_message(conversation_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+
+        # Make sure the logged-in user belongs to this conversation
+        membership = db.execute(
+            """
+            SELECT *
+            FROM conversation_members
+            WHERE conversation_id = ?
+            AND user_id = ?
+            """,
+            (
+                conversation_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
+        if membership is None:
+            abort(403)
+
+
+        content = request.form["content"].strip()
+
+        if content:
+
+            db.execute(
+                """
+                INSERT INTO messages (
+                    conversation_id,
+                    sender_id,
+                    content
+                )
+                VALUES (?, ?, ?)
+                """,
+                (
+                    conversation_id,
+                    g.user["id"],
+                    content
+                )
+            )
+
+            db.commit()
+
+
+        return redirect(
+            url_for(
+                "conversation",
+                conversation_id=conversation_id
+            )
+        )
+
+    @app.route("/messages")
+    def messages_inbox():
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+        conversations = db.execute(
+            """
+            SELECT
+                conversations.id AS conversation_id,
+
+                users.id AS user_id,
+                users.name,
+                users.university,
+
+                (
+                    SELECT messages.content
+                    FROM messages
+                    WHERE messages.conversation_id = conversations.id
+                    ORDER BY messages.created_at DESC, messages.id DESC
+                    LIMIT 1
+                ) AS last_message,
+
+                (
+                    SELECT messages.created_at
+                    FROM messages
+                    WHERE messages.conversation_id = conversations.id
+                    ORDER BY messages.created_at DESC, messages.id DESC
+                    LIMIT 1
+                ) AS last_message_time,
+
+                (
+                    SELECT COUNT(*)
+                    FROM messages
+                    WHERE messages.conversation_id = conversations.id
+                    AND messages.sender_id != ?
+                    AND messages.id > COALESCE(
+                        current_member.last_read_message_id,
+                        0
+                    )
+                ) AS unread_count
+
+            FROM conversations
+
+            JOIN conversation_members AS current_member
+                ON conversations.id = current_member.conversation_id
+
+            JOIN conversation_members AS other_member
+                ON conversations.id = other_member.conversation_id
+                AND other_member.user_id != current_member.user_id
+
+            JOIN users
+                ON other_member.user_id = users.id
+
+            WHERE current_member.user_id = ?
+
+            AND (
+                SELECT COUNT(*)
+                FROM conversation_members
+                WHERE conversation_id = conversations.id
+            ) = 2
+
+            ORDER BY
+                CASE
+                    WHEN last_message_time IS NULL
+                        THEN conversations.created_at
+                    ELSE last_message_time
+                END DESC
+            """,
+            (
+                g.user["id"],
+                g.user["id"]
+            )
+        ).fetchall()
+
+        return render_template(
+            "messages.html",
+            conversations=conversations
+        )
+
+    @app.route("/messages/unread")
+    def message_unread_counts():
+
+        if g.user is None:
+            return jsonify({
+                "total": 0,
+                "conversations": {}
+            })
+
+        db = get_db()
+
+        results = db.execute(
+            """
+            SELECT
+                conversation_members.conversation_id,
+
+                (
+                    SELECT COUNT(*)
+                    FROM messages
+
+                    WHERE messages.conversation_id =
+                        conversation_members.conversation_id
+
+                    AND messages.sender_id != ?
+
+                    AND messages.id > COALESCE(
+                        conversation_members.last_read_message_id,
+                        0
+                    )
+                ) AS unread_count
+
+            FROM conversation_members
+
+            WHERE conversation_members.user_id = ?
+            """,
+            (
+                g.user["id"],
+                g.user["id"]
+            )
+        ).fetchall()
+
+        conversations = {
+            str(result["conversation_id"]): result["unread_count"]
+            for result in results
+        }
+
+        total = sum(conversations.values())
+
+        return jsonify({
+            "total": total,
+            "conversations": conversations
+        })
     return app
 
 

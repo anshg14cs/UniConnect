@@ -46,6 +46,21 @@
             </a>
 
             {% if g.user %}
+            <a
+                href="{{ url_for('messages_inbox') }}"
+                class="nav-messages"
+            >
+                Messages
+
+                <span
+                    class="message-badge"
+                    {% if g.message_count == 0 %}
+                        style="display: none;"
+                    {% endif %}
+                >
+                    {{ g.message_count }}
+                </span>
+            </a>
             <a href="{{ url_for('students') }}">
             Discover
             </a>

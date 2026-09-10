@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Messages | UniConnect</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body class="messages-page">
+
+    <main class="messages-container">
+
+        <div class="messages-header">
+
+            <h1>
+                Messages
+            </h1>
+
+            <p>
+                Your conversations with connections.
+            </p>
+
+        </div>
+
+
+        {% if conversations %}
+
+            <div class="messages-list">
+
+                {% for conversation in conversations %}
+
+                    <a
+                        href="{{ url_for('conversation', conversation_id=conversation['conversation_id']) }}"
+                        class="messages-card {% if conversation['unread_count'] > 0 %}messages-card-unread{% endif %}"
+                        data-conversation-id="{{ conversation['conversation_id'] }}"
+                    >
+
+                        <div class="messages-avatar">
+
+                            {{ conversation["name"][0] | upper }}
+
+                        </div>
+
+
+                        <div class="messages-info">
+
+                            <div class="messages-card-top">
+
+                                <h2>
+                                    {{ conversation["name"] }}
+                                </h2>
+
+
+                                {% if conversation["last_message_time"] %}
+
+                                    <span class="messages-time">
+
+                                        {{ conversation["last_message_time"] | time_ago }}
+
+                                    </span>
+
+                                {% endif %}
+
+
+                                <span
+                                    class="messages-unread-badge"
+
+                                    {% if conversation["unread_count"] == 0 %}
+                                        style="display: none;"
+                                    {% endif %}
+                                >
+
+                                    {{ conversation["unread_count"] }}
+
+                                </span>
+
+                            </div>
+
+
+                            <p class="messages-university">
+
+                                {{ conversation["university"] }}
+
+                            </p>
+
+
+                            {% if conversation["last_message"] %}
+
+                                <p class="messages-preview">
+
+                                    {{ conversation["last_message"] }}
+
+                                </p>
+
+                            {% else %}
+
+                                <p class="messages-preview messages-preview-empty">
+
+                                    No messages yet.
+
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="messages-empty">
+
+                <h2>
+                    No conversations yet
+                </h2>
+
+                <p>
+                    Start a conversation from one of your connections' profiles.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}"
+    ></script>
+
+</body>
+
+</html>

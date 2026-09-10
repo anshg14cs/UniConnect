@@ -143,7 +143,9 @@ progressDots.forEach((dot) => {
 
 });
 
+
 async function refreshNotificationCount() {
+
     const response = await fetch(
         "/notifications/count",
         {
@@ -157,17 +159,121 @@ async function refreshNotificationCount() {
         ".notification-badge"
     );
 
+
     if (badge) {
-    if (data.count > 0) {
-        badge.textContent = data.count;
-        badge.style.display = "inline-flex";
-    } else {
-        badge.style.display = "none";
+
+        if (data.count > 0) {
+
+            badge.textContent = data.count;
+
+            badge.style.display = "inline-flex";
+
+        } else {
+
+            badge.style.display = "none";
+
+        }
+
     }
+
 }
-}
+
 
 window.addEventListener(
     "pageshow",
     refreshNotificationCount
+);
+
+
+
+async function refreshMessageCounts() {
+
+    try {
+
+        const response = await fetch(
+            "/messages/unread",
+            {
+                cache: "no-store"
+            }
+        );
+
+        const data = await response.json();
+
+
+        // Navbar Messages badge
+        const navbarBadge =
+            document.querySelector(
+                ".message-badge"
+            );
+
+
+        if (navbarBadge) {
+
+            navbarBadge.textContent =
+                data.total;
+
+            navbarBadge.style.display =
+                data.total > 0
+                    ? "inline-flex"
+                    : "none";
+
+        }
+
+
+        // Individual conversation cards
+        document.querySelectorAll(
+            ".messages-card"
+        ).forEach((card) => {
+
+            const conversationId =
+                card.dataset.conversationId;
+
+            const unreadCount =
+                Number(
+                    data.conversations[
+                        conversationId
+                    ] || 0
+                );
+
+            const badge =
+                card.querySelector(
+                    ".messages-unread-badge"
+                );
+
+
+            card.classList.toggle(
+                "messages-card-unread",
+                unreadCount > 0
+            );
+
+
+            if (badge) {
+
+                badge.textContent =
+                    unreadCount;
+
+                badge.style.display =
+                    unreadCount > 0
+                        ? "inline-flex"
+                        : "none";
+
+            }
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Could not refresh message counts:",
+            error
+        );
+
+    }
+
+}
+
+
+window.addEventListener(
+    "pageshow",
+    refreshMessageCounts
 );

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Message {{ other_user["name"] }} | UniConnect</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body class="conversation-page">
+
+    <main class="conversation-container">
+
+        <div class="conversation-header">
+
+            <a
+                href="{{ url_for('messages_inbox') }}"
+                class="conversation-back"
+            >
+                ← Back to Messages
+            </a>
+
+            <div class="conversation-user">
+
+                <div class="conversation-avatar">
+                    {{ other_user["name"][0] | upper }}
+                </div>
+
+                <div class="conversation-user-info">
+
+                    <h1>
+                        {{ other_user["name"] }}
+                    </h1>
+
+                    <p>
+                        {{ other_user["university"] }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <section class="conversation-messages">
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div
+                        class="conversation-message
+                        {% if message['sender_id'] == g.user['id'] %}
+                            conversation-message-sent
+                        {% else %}
+                            conversation-message-received
+                        {% endif %}"
+                    >
+
+                        <div class="conversation-message-bubble">
+
+                            <p>
+                                {{ message["content"] }}
+                            </p>
+
+                            <span>
+                                {{ message["created_at"] | time_ago }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="conversation-empty">
+
+                    <p>
+                        No messages yet. Start the conversation.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <form
+            method="post"
+            action="{{ url_for('send_message', conversation_id=conversation_id) }}"
+            class="conversation-form"
+        >
+
+            <input
+                type="text"
+                name="content"
+                placeholder="Write a message..."
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit">
+                Send
+            </button>
+
+        </form>
+
+    </main>
+
+</body>
+</html>

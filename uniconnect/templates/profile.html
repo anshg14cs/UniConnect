@@ -128,12 +128,28 @@
 
                     {% elif relationship["status"] == "accepted" %}
 
-                        <button
-                            class="profile-add-friend"
-                            disabled
-                        >
-                            Friends
-                        </button>
+                        <div class="profile-friend-actions">
+
+                            <button
+                                class="profile-add-friend"
+                                disabled
+                            >
+                                Friends
+                            </button>
+
+                            <form
+                                method="post"
+                                action="{{ url_for('start_conversation', user_id=user['id']) }}"
+                            >
+                                <button
+                                    type="submit"
+                                    class="profile-message-button"
+                                >
+                                    Message
+                                </button>
+                            </form>
+
+                        </div>
 
                     {% endif %}
 

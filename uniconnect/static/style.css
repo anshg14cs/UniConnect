@@ -3241,6 +3241,30 @@ body.students-page {
     background: #f3f4f6;
 }
 
+.profile-message-button {
+    padding: 10px 18px;
+
+    border: 1px solid var(--green);
+    border-radius: 9px;
+
+    background: white;
+    color: var(--green);
+
+    font-size: 0.9rem;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.profile-message-button:hover {
+    background: var(--green);
+    color: white;
+}
+
+.profile-friend-actions form {
+    margin: 0;
+}
+
 body.notifications-page {
     margin: 0;
     min-height: 100vh;
@@ -4412,6 +4436,641 @@ body.feed-page {
 
 .notification-view-post:hover {
     color: var(--green-dark);
+}
+
+/* ================================
+   MESSAGES INBOX
+================================ */
+
+body.messages-page {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f6faf7;
+    color: var(--text);
+}
+
+
+.messages-container {
+    width: min(820px, 92%);
+    margin: 0 auto;
+    padding: 45px 0 70px;
+}
+
+
+.messages-header {
+    margin-bottom: 26px;
+}
+
+
+.messages-header h1 {
+    margin: 0 0 6px;
+
+    font-size: 2rem;
+
+    color: #111827;
+}
+
+
+.messages-header p {
+    margin: 0;
+
+    color: var(--text-soft);
+}
+
+
+/* ================================
+   CONVERSATION LIST
+================================ */
+
+.messages-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+.messages-card {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 18px 20px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+
+    text-decoration: none;
+    color: inherit;
+
+    transition: 0.2s ease;
+}
+
+
+.messages-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 32px
+        rgba(31, 41, 55, 0.08);
+}
+
+
+.messages-avatar {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: var(--green-light);
+    color: var(--green-dark);
+
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+
+.messages-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.messages-card-top {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.messages-card-top h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 1rem;
+}
+
+
+.messages-time {
+    margin-left: auto;
+
+    flex-shrink: 0;
+
+    color: var(--text-soft);
+
+    font-size: 0.78rem;
+}
+
+
+.messages-university {
+    margin: 3px 0 6px;
+
+    color: var(--green);
+
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+
+.messages-preview {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 0.88rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.messages-preview-empty {
+    font-style: italic;
+}
+
+
+/* ================================
+   EMPTY INBOX
+================================ */
+
+.messages-empty {
+    padding: 45px 25px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+}
+
+
+.messages-empty h2 {
+    margin: 0 0 8px;
+
+    color: #111827;
+
+    font-size: 1.2rem;
+}
+
+
+.messages-empty p {
+    margin: 0;
+
+    color: var(--text-soft);
+}
+
+.messages-card-unread {
+    background: var(--green-pale);
+    border-color: #cce8d6;
+}
+
+
+.messages-card-unread .messages-preview {
+    color: #374151;
+    font-weight: 600;
+}
+
+
+.messages-unread-badge {
+    min-width: 20px;
+    height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 6px;
+
+    border-radius: 999px;
+
+    background: var(--green);
+    color: white;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+.nav-links > a.nav-messages {
+    width: auto !important;
+
+    display: inline-flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    white-space: nowrap;
+}
+
+
+.message-badge {
+    min-width: 20px;
+    height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 5px;
+
+    border-radius: 999px;
+
+    background: var(--green);
+    color: white;
+
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ================================
+   CONVERSATION PAGE
+================================ */
+
+body.conversation-page {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f6faf7;
+    color: var(--text);
+}
+
+
+.conversation-container {
+    width: min(850px, 92%);
+    margin: 0 auto;
+
+    padding: 40px 0 60px;
+}
+
+
+/* ================================
+   CONVERSATION HEADER
+================================ */
+
+.conversation-header {
+    margin-bottom: 20px;
+
+    padding: 22px 24px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+}
+
+
+.conversation-back {
+    display: inline-block;
+
+    margin-bottom: 18px;
+
+    color: var(--green);
+
+    font-size: 0.88rem;
+    font-weight: 650;
+}
+
+
+.conversation-back:hover {
+    color: var(--green-dark);
+}
+
+
+.conversation-user {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.conversation-avatar {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: var(--green-light);
+    color: var(--green-dark);
+
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+
+.conversation-user-info h1 {
+    margin: 0 0 4px;
+
+    color: #111827;
+
+    font-size: 1.15rem;
+}
+
+
+.conversation-user-info p {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 0.85rem;
+}
+
+
+/* ================================
+   MESSAGE AREA
+================================ */
+
+.conversation-messages {
+    min-height: 450px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    padding: 24px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+}
+
+
+/* ================================
+   INDIVIDUAL MESSAGES
+================================ */
+
+.conversation-message {
+    display: flex;
+
+    width: 100%;
+}
+
+
+.conversation-message-received {
+    justify-content: flex-start;
+}
+
+
+.conversation-message-sent {
+    justify-content: flex-end;
+}
+
+
+.conversation-message-bubble {
+    max-width: 70%;
+
+    padding: 11px 14px;
+
+    border-radius: 14px;
+}
+
+
+.conversation-message-received
+.conversation-message-bubble {
+    background: #f3f4f6;
+
+    border-bottom-left-radius: 5px;
+}
+
+
+.conversation-message-sent
+.conversation-message-bubble {
+    background: var(--green);
+
+    color: white;
+
+    border-bottom-right-radius: 5px;
+}
+
+
+.conversation-message-bubble p {
+    margin: 0 0 5px;
+
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+}
+
+
+.conversation-message-bubble span {
+    display: block;
+
+    font-size: 0.7rem;
+
+    opacity: 0.7;
+}
+
+
+.conversation-message-sent
+.conversation-message-bubble span {
+    text-align: right;
+}
+
+
+/* ================================
+   EMPTY CONVERSATION
+================================ */
+
+.conversation-empty {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 400px;
+
+    color: var(--text-soft);
+
+    text-align: center;
+}
+
+
+.conversation-empty p {
+    margin: 0;
+}
+
+
+/* ================================
+   SEND MESSAGE FORM
+================================ */
+
+.conversation-form {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 16px;
+
+    padding: 12px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow:
+        0 10px 28px
+        rgba(31, 41, 55, 0.05);
+}
+
+
+.conversation-form input {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 11px 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    font: inherit;
+
+    outline: none;
+}
+
+
+.conversation-form input:focus {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(25, 135, 84, 0.10);
+}
+
+
+.conversation-form button {
+    padding: 11px 18px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: var(--green);
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.conversation-form button:hover {
+    background: var(--green-dark);
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 650px) {
+
+    .conversation-container {
+        width: 94%;
+
+        padding-top: 24px;
+    }
+
+
+    .conversation-header {
+        padding: 18px;
+    }
+
+
+    .conversation-messages {
+        min-height: 400px;
+
+        padding: 16px;
+    }
+
+
+    .conversation-message-bubble {
+        max-width: 82%;
+    }
+
+
+    .conversation-form {
+        padding: 10px;
+    }
+
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 650px) {
+
+    .messages-card {
+        align-items: flex-start;
+
+        padding: 16px;
+    }
+
+    .messages-time {
+        font-size: 0.72rem;
+    }
+
 }
 
 /* ================================
