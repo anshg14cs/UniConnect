@@ -50,7 +50,10 @@
 
                 {% for post in posts %}
 
-                    <article class="feed-post">
+                    <article
+                        class="feed-post"
+                        id="post-{{ post['id'] }}"
+                    >
 
                         <div class="feed-post-header">
 
@@ -154,6 +157,18 @@
                                         Like
                                     {% else %}
                                         Likes
+                                    {% endif %}
+
+                                </span>
+
+                                <span class="feed-comment-count">
+
+                                    {{ post["comment_count"] }}
+
+                                    {% if post["comment_count"] == 1 %}
+                                        Comment
+                                    {% else %}
+                                        Comments
                                     {% endif %}
 
                                 </span>

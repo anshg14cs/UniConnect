@@ -51,11 +51,14 @@
             </a>
             <a href="{{ url_for('notifications') }}" class="nav-notifications">
                 Notifications
-                {% if g.notification_count > 0 %}
-                    <span class="notification-badge">
+                    <span
+                        class="notification-badge"
+                        {% if g.notification_count == 0 %}
+                            style="display: none;"
+                        {% endif %}
+                    >
                         {{ g.notification_count }}
                     </span>
-                {% endif %}
             </a>
             <a href="{{ url_for('profile') }}">
                 {{ g.user["name"] }}

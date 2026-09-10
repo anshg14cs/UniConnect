@@ -88,7 +88,10 @@
 
             {% for notification in social_notifications %}
 
-                <div class="notification-card social-notification">
+                <div
+                    class="notification-card social-notification
+                    {% if not notification['is_read'] %}notification-unread{% endif %}"
+                >
 
                     <div class="notification-avatar">
                         {{ notification["actor_name"][0] | upper }}
@@ -138,6 +141,13 @@
                         <span class="notification-time">
                             {{ notification["created_at"] | time_ago }}
                         </span>
+
+                        <a
+                            href="{{ url_for('feed') }}#post-{{ notification['post_id'] }}"
+                            class="notification-view-post"
+                        >
+                            View Post
+                        </a>
 
                     </div>
 

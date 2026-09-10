@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session, g, abort
+from flask import Flask, render_template, request, redirect, url_for, session, g, abort, jsonify
 from .universities import UK_UNIVERSITIES
 from werkzeug.security import generate_password_hash, check_password_hash
 from .db import get_db
@@ -644,6 +644,44 @@ def create_app():
             social_notifications=social_notifications
         )
 
+    @app.route("/notifications/count")
+    def notification_count():
+
+        if g.user is None:
+            return jsonify({"count": 0})
+
+        db = get_db()
+
+        friend_request_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM friend_requests
+            WHERE receiver_id = ?
+            AND status = 'pending'
+            """,
+            (g.user["id"],)
+        ).fetchone()
+
+        social_notification_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM notifications
+            WHERE recipient_id = ?
+            AND is_read = 0
+            """,
+            (g.user["id"],)
+        ).fetchone()
+
+        count = (
+            friend_request_result["count"]
+            +
+            social_notification_result["count"]
+        )
+
+        return jsonify({
+            "count": count
+        })
+
     @app.route("/users/<int:user_id>/connections")
     def user_connections(user_id):
 
@@ -798,6 +836,12 @@ def create_app():
                 users.id AS user_id,
                 users.name,
                 users.university,
+
+                (
+                    SELECT COUNT(*)
+                    FROM comments
+                    WHERE comments.post_id = posts.id
+                ) AS comment_count,
 
                 (
                     SELECT COUNT(*)
@@ -1085,6 +1129,14 @@ def create_app():
 
         db.execute(
             """
+            DELETE FROM notifications
+            WHERE post_id = ?
+            """,
+            (post_id,)
+        )
+
+        db.execute(
+            """
             DELETE FROM post_likes
             WHERE post_id = ?
             """,
@@ -1133,6 +1185,14 @@ def create_app():
 
         if comment["user_id"] != g.user["id"]:
             abort(403)
+
+        db.execute(
+            """
+            DELETE FROM notifications
+            WHERE comment_id = ?
+            """,
+            (comment_id,)
+        )
 
         db.execute(
             """

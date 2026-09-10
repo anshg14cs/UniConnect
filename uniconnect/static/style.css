@@ -4161,6 +4161,11 @@ body.feed-page {
     font-size: 0.8rem;
 }
 
+.feed-comment-count {
+    color: var(--text-soft);
+    font-size: 0.8rem;
+}
+
 /* ================================
    FEED COMMENTS
 ================================ */
@@ -4359,6 +4364,54 @@ body.feed-page {
 
 .feed-comment-delete-button:hover {
     color: #dc2626;
+}
+
+/* ================================
+   SOCIAL NOTIFICATIONS
+================================ */
+
+.notification-user-link {
+    color: #111827;
+    font-weight: 700;
+}
+
+.notification-user-link:hover {
+    color: var(--green);
+}
+
+.notification-comment-preview {
+    margin: 6px 0;
+
+    color: #4b5563;
+
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.notification-time {
+    color: var(--text-soft);
+
+    font-size: 0.78rem;
+}
+
+.notification-unread {
+    background: var(--green-pale);
+
+    border-color: #cce8d6;
+}
+
+.notification-view-post {
+    display: inline-block;
+    margin-top: 7px;
+
+    color: var(--green);
+
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+.notification-view-post:hover {
+    color: var(--green-dark);
 }
 
 /* ================================
