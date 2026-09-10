@@ -142,3 +142,32 @@ progressDots.forEach((dot) => {
     );
 
 });
+
+async function refreshNotificationCount() {
+    const response = await fetch(
+        "/notifications/count",
+        {
+            cache: "no-store"
+        }
+    );
+
+    const data = await response.json();
+
+    const badge = document.querySelector(
+        ".notification-badge"
+    );
+
+    if (badge) {
+    if (data.count > 0) {
+        badge.textContent = data.count;
+        badge.style.display = "inline-flex";
+    } else {
+        badge.style.display = "none";
+    }
+}
+}
+
+window.addEventListener(
+    "pageshow",
+    refreshNotificationCount
+);

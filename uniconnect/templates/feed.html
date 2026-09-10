@@ -50,7 +50,10 @@
 
                 {% for post in posts %}
 
-                    <article class="feed-post">
+                    <article
+                        class="feed-post"
+                        id="post-{{ post['id'] }}"
+                    >
 
                         <div class="feed-post-header">
 
@@ -73,9 +76,49 @@
 
                             </div>
 
-                            <span class="feed-post-time">
-                                {{ post["created_at"] | time_ago }}
-                            </span>
+                            <div class="feed-post-header-actions">
+
+                                <span class="feed-post-time">
+                                    {{ post["created_at"] | time_ago }}
+                                </span>
+
+                                {% if post["user_id"] == g.user["id"] %}
+
+                                    <form
+                                        method="post"
+                                        action="{{ url_for('delete_post', post_id=post['id']) }}"
+                                        class="feed-delete-form"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="feed-delete-button"
+                                        >
+
+                                            <svg
+                                                class="feed-delete-icon"
+                                                viewBox="0 0 24 24"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+
+                                {% endif %}
+
+                            </div>
 
                         </div>
 
@@ -83,6 +126,156 @@
                         <p class="feed-post-content">
                             {{ post["content"] }}
                         </p>
+
+                            <div class="feed-post-actions">
+
+                                <form
+                                    method="post"
+                                    action="{{ url_for('toggle_like', post_id=post['id']) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="feed-like-button {% if post['liked_by_user'] %}liked{% endif %}"
+                                        aria-label="{% if post['liked_by_user'] %}Unlike post{% else %}Like post{% endif %}"
+                                    >
+                                        {% if post["liked_by_user"] %}
+                                            ♥
+                                        {% else %}
+                                            ♡
+                                        {% endif %}
+                                    </button>
+
+                                </form>
+
+
+                                <span class="feed-like-count">
+
+                                    {{ post["like_count"] }}
+
+                                    {% if post["like_count"] == 1 %}
+                                        Like
+                                    {% else %}
+                                        Likes
+                                    {% endif %}
+
+                                </span>
+
+                                <span class="feed-comment-count">
+
+                                    {{ post["comment_count"] }}
+
+                                    {% if post["comment_count"] == 1 %}
+                                        Comment
+                                    {% else %}
+                                        Comments
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                            <div class="feed-comments">
+
+                                {% set post_comments = comments_by_post.get(post["id"], []) %}
+
+                                {% if post_comments %}
+
+                                    <div class="feed-comments-list">
+
+                                        {% for comment in post_comments %}
+
+                                            <div class="feed-comment">
+
+                                                <div class="feed-comment-avatar">
+                                                    {{ comment["name"][0] | upper }}
+                                                </div>
+
+                                                <div class="feed-comment-content">
+
+                                                    <div class="feed-comment-header">
+
+                                                        <a
+                                                            href="{{ url_for('user_profile', user_id=comment['user_id']) }}"
+                                                            class="feed-comment-name"
+                                                        >
+                                                            {{ comment["name"] }}
+                                                        </a>
+
+                                                        <span class="feed-comment-time">
+                                                            {{ comment["created_at"] | time_ago }}
+                                                        </span>
+
+                                                        {% if comment["user_id"] == g.user["id"] %}
+
+                                                            <form
+                                                                method="post"
+                                                                action="{{ url_for('delete_comment', comment_id=comment['id']) }}"
+                                                                class="feed-comment-delete-form"
+                                                            >
+
+                                                                <button
+                                                                    type="submit"
+                                                                    class="feed-comment-delete-button"
+                                                                    aria-label="Delete comment"
+                                                                >
+                                                                    <svg
+                                                                        class="feed-comment-delete-icon"
+                                                                        viewBox="0 0 24 24"
+                                                                        aria-hidden="true"
+                                                                    >
+                                                                        <path
+                                                                            d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5"
+                                                                            fill="none"
+                                                                            stroke="currentColor"
+                                                                            stroke-width="2"
+                                                                            stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                        />
+                                                                    </svg>
+                                                                </button>
+
+                                                            </form>
+
+                                                        {% endif %}
+
+                                                    </div>
+
+                                                    <p>
+                                                        {{ comment["content"] }}
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <form
+                                    method="post"
+                                    action="{{ url_for('create_comment', post_id=post['id']) }}"
+                                    class="feed-comment-form"
+                                >
+
+                                    <input
+                                        type="text"
+                                        name="content"
+                                        placeholder="Write a comment..."
+                                        required
+                                    >
+
+                                    <button type="submit">
+                                        Comment
+                                    </button>
+
+                                </form>
+
+                            </div>
 
                     </article>
 
