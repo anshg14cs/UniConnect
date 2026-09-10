@@ -35,7 +35,7 @@ def create_app():
                 (user_id,)
             ).fetchone()
 
-            result = db.execute(
+            friend_request_result = db.execute(
                 """
                 SELECT COUNT(*) AS count
                 FROM friend_requests
@@ -45,7 +45,17 @@ def create_app():
                 (user_id,)
             ).fetchone()
 
-            g.notification_count = result["count"]
+            social_notification_result = db.execute(
+                """
+                SELECT COUNT(*) AS count
+                FROM notifications
+                WHERE recipient_id = ?
+                AND is_read = 0
+                """,
+                (user_id,)
+            ).fetchone()
+
+            g.notification_count = (friend_request_result["count"] + social_notification_result["count"])
 
     @app.route("/")
     def home():
@@ -559,6 +569,7 @@ def create_app():
 
         db = get_db()
 
+
         friend_requests = db.execute(
             """
             SELECT
@@ -580,9 +591,57 @@ def create_app():
             (g.user["id"],)
         ).fetchall()
 
+
+        social_notifications = db.execute(
+            """
+            SELECT
+                notifications.id,
+                notifications.type,
+                notifications.post_id,
+                notifications.comment_id,
+                notifications.is_read,
+                notifications.created_at,
+
+                users.id AS actor_id,
+                users.name AS actor_name,
+                users.university AS actor_university,
+
+                comments.content AS comment_content
+
+            FROM notifications
+
+            JOIN users
+                ON notifications.actor_id = users.id
+
+            LEFT JOIN comments
+                ON notifications.comment_id = comments.id
+
+            WHERE notifications.recipient_id = ?
+
+            ORDER BY notifications.created_at DESC
+            """,
+            (g.user["id"],)
+        ).fetchall()
+
+        db.execute(
+            """
+            UPDATE notifications
+            SET is_read = 1
+            WHERE recipient_id = ?
+            AND is_read = 0
+            """,
+            (g.user["id"],)
+        )
+
+        db.commit()
+
+        g.notification_count = len(friend_requests)
+
+
         return render_template(
             "notifications.html",
-            friend_requests=friend_requests
+            friend_requests=friend_requests,
+            social_notifications=social_notifications
         )
 
     @app.route("/users/<int:user_id>/connections")
@@ -871,6 +930,7 @@ def create_app():
             (g.user["id"], post_id)
         ).fetchone()
 
+
         if existing_like is None:
 
             db.execute(
@@ -880,6 +940,29 @@ def create_app():
                 """,
                 (g.user["id"], post_id)
             )
+
+            # Create a notification only when liking
+            # somebody else's post
+            if post["user_id"] != g.user["id"]:
+
+                db.execute(
+                    """
+                    INSERT INTO notifications (
+                        recipient_id,
+                        actor_id,
+                        type,
+                        post_id
+                    )
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    (
+                        post["user_id"],
+                        g.user["id"],
+                        "like",
+                        post_id
+                    )
+                )
+
 
         else:
 
@@ -892,9 +975,26 @@ def create_app():
                 (g.user["id"], post_id)
             )
 
+            db.execute(
+                """
+                DELETE FROM notifications
+                WHERE recipient_id = ?
+                AND actor_id = ?
+                AND type = 'like'
+                AND post_id = ?
+                """,
+                (
+                    post["user_id"],
+                    g.user["id"],
+                    post_id
+                )
+            )
+
+
         db.commit()
 
         return redirect(url_for("feed"))
+         
 
     @app.route("/posts/<int:post_id>/comments/create", methods=["POST"])
     def create_comment(post_id):
@@ -920,7 +1020,7 @@ def create_app():
 
         if content:
 
-            db.execute(
+            cursor = db.execute(
                 """
                 INSERT INTO comments (post_id, user_id, content)
                 VALUES (?, ?, ?)
@@ -931,6 +1031,30 @@ def create_app():
                     content
                 )
             )
+
+            comment_id = cursor.lastrowid
+
+            if post["user_id"] != g.user["id"]:
+
+                db.execute(
+                    """
+                    INSERT INTO notifications (
+                        recipient_id,
+                        actor_id,
+                        type,
+                        post_id,
+                        comment_id
+                    )
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (
+                        post["user_id"],
+                        g.user["id"],
+                        "comment",
+                        post_id,
+                        comment_id
+                    )
+                )
 
             db.commit()
 

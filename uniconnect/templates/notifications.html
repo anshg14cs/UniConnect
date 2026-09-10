@@ -16,7 +16,12 @@
 
         <h1>Notifications</h1>
 
-        {% if friend_requests %}
+
+        {% if friend_requests or social_notifications %}
+
+            <!-- ================================
+                FRIEND REQUESTS
+            ================================= -->
 
             {% for friend_request in friend_requests %}
 
@@ -26,10 +31,14 @@
                         {{ friend_request["name"][0] | upper }}
                     </div>
 
+
                     <div class="notification-info">
 
                         <p>
-                            <strong>{{ friend_request["name"] }}</strong>
+                            <strong>
+                                {{ friend_request["name"] }}
+                            </strong>
+
                             sent you a friend request.
                         </p>
 
@@ -39,9 +48,12 @@
 
                     </div>
 
+
                     <div class="notification-actions">
 
-                        <a href="{{ url_for('user_profile', user_id=friend_request['user_id']) }}">
+                        <a
+                            href="{{ url_for('user_profile', user_id=friend_request['user_id']) }}"
+                        >
                             View Profile
                         </a>
 
@@ -69,10 +81,79 @@
 
             {% endfor %}
 
+
+            <!-- ================================
+                LIKE / COMMENT NOTIFICATIONS
+            ================================= -->
+
+            {% for notification in social_notifications %}
+
+                <div class="notification-card social-notification">
+
+                    <div class="notification-avatar">
+                        {{ notification["actor_name"][0] | upper }}
+                    </div>
+
+
+                    <div class="notification-info">
+
+                        {% if notification["type"] == "like" %}
+
+                            <p>
+                                <a
+                                    href="{{ url_for('user_profile', user_id=notification['actor_id']) }}"
+                                    class="notification-user-link"
+                                >
+                                    {{ notification["actor_name"] }}
+                                </a>
+
+                                liked your post.
+                            </p>
+
+
+                        {% elif notification["type"] == "comment" %}
+
+                            <p>
+                                <a
+                                    href="{{ url_for('user_profile', user_id=notification['actor_id']) }}"
+                                    class="notification-user-link"
+                                >
+                                    {{ notification["actor_name"] }}
+                                </a>
+
+                                commented on your post.
+                            </p>
+
+                            {% if notification["comment_content"] %}
+
+                                <p class="notification-comment-preview">
+                                    "{{ notification["comment_content"] }}"
+                                </p>
+
+                            {% endif %}
+
+                        {% endif %}
+
+
+                        <span class="notification-time">
+                            {{ notification["created_at"] | time_ago }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+
         {% else %}
 
             <div class="notifications-empty">
-                <p>You have no new notifications.</p>
+
+                <p>
+                    You have no new notifications.
+                </p>
+
             </div>
 
         {% endif %}
