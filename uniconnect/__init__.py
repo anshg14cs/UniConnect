@@ -27,7 +27,6 @@ def create_app():
         if user_id is None:
             g.user = None
             g.notification_count = 0
-            g.message_count = 0
 
         else:
             db = get_db()
@@ -55,33 +54,6 @@ def create_app():
                 """,
                 (user_id,)
             ).fetchone()
-
-            message_result = db.execute(
-                """
-                SELECT COUNT(*) AS count
-
-                FROM messages
-
-                JOIN conversation_members
-                    ON messages.conversation_id =
-                    conversation_members.conversation_id
-
-                WHERE conversation_members.user_id = ?
-
-                AND messages.sender_id != ?
-
-                AND messages.id > COALESCE(
-                    conversation_members.last_read_message_id,
-                    0
-                )
-                """,
-                (
-                    user_id,
-                    user_id
-                )
-            ).fetchone()
-
-            g.message_count = message_result["count"]
 
             g.notification_count = (friend_request_result["count"] + social_notification_result["count"])
 
@@ -627,6 +599,8 @@ def create_app():
                 notifications.type,
                 notifications.post_id,
                 notifications.comment_id,
+                notifications.conversation_id,
+                notifications.message_id,
                 notifications.is_read,
                 notifications.created_at,
 
@@ -634,7 +608,8 @@ def create_app():
                 users.name AS actor_name,
                 users.university AS actor_university,
 
-                comments.content AS comment_content
+                comments.content AS comment_content,
+                messages.content AS message_content
 
             FROM notifications
 
@@ -643,6 +618,9 @@ def create_app():
 
             LEFT JOIN comments
                 ON notifications.comment_id = comments.id
+
+            LEFT JOIN messages
+                ON notifications.message_id = messages.id
 
             WHERE notifications.recipient_id = ?
 
@@ -1457,7 +1435,50 @@ def create_app():
                 )
             )
 
-            db.commit()
+        db.execute(
+            """
+            UPDATE notifications
+            SET is_read = 1
+            WHERE recipient_id = ?
+            AND conversation_id = ?
+            AND type = 'message'
+            AND is_read = 0
+            """,
+            (
+                g.user["id"],
+                conversation_id
+            )
+        )
+
+        db.commit()
+
+        friend_request_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM friend_requests
+            WHERE receiver_id = ?
+            AND status = 'pending'
+            """,
+            (g.user["id"],)
+        ).fetchone()
+
+
+        social_notification_result = db.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM notifications
+            WHERE recipient_id = ?
+            AND is_read = 0
+            """,
+            (g.user["id"],)
+        ).fetchone()
+
+
+        g.notification_count = (
+            friend_request_result["count"]
+            +
+            social_notification_result["count"]
+        )
 
 
         return render_template(
@@ -1494,11 +1515,29 @@ def create_app():
             abort(403)
 
 
+        # Find the other person in the conversation
+        recipient = db.execute(
+            """
+            SELECT user_id
+            FROM conversation_members
+            WHERE conversation_id = ?
+            AND user_id != ?
+            """,
+            (
+                conversation_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
+        if recipient is None:
+            abort(404)
+
+
         content = request.form["content"].strip()
 
         if content:
 
-            db.execute(
+            cursor = db.execute(
                 """
                 INSERT INTO messages (
                     conversation_id,
@@ -1511,6 +1550,29 @@ def create_app():
                     conversation_id,
                     g.user["id"],
                     content
+                )
+            )
+
+            message_id = cursor.lastrowid
+
+
+            db.execute(
+                """
+                INSERT INTO notifications (
+                    recipient_id,
+                    actor_id,
+                    type,
+                    conversation_id,
+                    message_id
+                )
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    recipient["user_id"],
+                    g.user["id"],
+                    "message",
+                    conversation_id,
+                    message_id
                 )
             )
 

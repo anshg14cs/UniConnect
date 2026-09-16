@@ -112,6 +112,8 @@ CREATE TABLE IF NOT EXISTS notifications (
     FOREIGN KEY (actor_id) REFERENCES users (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
     FOREIGN KEY (comment_id) REFERENCES comments (id)
+    FOREIGN KEY (conversation_id) REFERENCES conversations (id),
+    FOREIGN KEY (message_id) REFERENCES messages (id)
 );
 
 CREATE TABLE IF NOT EXISTS conversations (

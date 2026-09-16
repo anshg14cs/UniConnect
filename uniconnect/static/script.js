@@ -200,26 +200,6 @@ async function refreshMessageCounts() {
         const data = await response.json();
 
 
-        // Navbar Messages badge
-        const navbarBadge =
-            document.querySelector(
-                ".message-badge"
-            );
-
-
-        if (navbarBadge) {
-
-            navbarBadge.textContent =
-                data.total;
-
-            navbarBadge.style.display =
-                data.total > 0
-                    ? "inline-flex"
-                    : "none";
-
-        }
-
-
         // Individual conversation cards
         document.querySelectorAll(
             ".messages-card"
@@ -277,3 +257,36 @@ window.addEventListener(
     "pageshow",
     refreshMessageCounts
 );
+
+if (
+    document.body.classList.contains(
+        "notifications-page"
+    )
+) {
+
+    let notificationsPageAlreadyShown = false;
+
+    window.addEventListener(
+        "pageshow",
+        () => {
+
+            if (notificationsPageAlreadyShown) {
+
+                document.querySelectorAll(
+                    ".notification-unread"
+                ).forEach((notification) => {
+
+                    notification.classList.remove(
+                        "notification-unread"
+                    );
+
+                });
+
+            }
+
+            notificationsPageAlreadyShown = true;
+
+        }
+    );
+
+}

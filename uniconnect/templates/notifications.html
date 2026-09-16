@@ -135,6 +135,27 @@
 
                             {% endif %}
 
+                        {% elif notification["type"] == "message" %}
+
+                            <p>
+                                <a
+                                    href="{{ url_for('user_profile', user_id=notification['actor_id']) }}"
+                                    class="notification-user-link"
+                                >
+                                    {{ notification["actor_name"] }}
+                                </a>
+
+                                sent you a message.
+                            </p>
+
+                            {% if notification["message_content"] %}
+
+                                <p class="notification-comment-preview">
+                                    "{{ notification["message_content"] }}"
+                                </p>
+
+                            {% endif %}
+
                         {% endif %}
 
 
@@ -142,12 +163,29 @@
                             {{ notification["created_at"] | time_ago }}
                         </span>
 
-                        <a
-                            href="{{ url_for('feed') }}#post-{{ notification['post_id'] }}"
-                            class="notification-view-post"
-                        >
-                            View Post
-                        </a>
+                        {% if notification["type"] == "like"
+                            or notification["type"] == "comment" %}
+
+                            <a
+                                href="{{ url_for('feed') }}#post-{{ notification['post_id'] }}"
+                                class="notification-view-post"
+                            >
+                                View Post
+                            </a>
+
+                        {% elif notification["type"] == "message" %}
+
+                            <a
+                                href="{{ url_for(
+                                    'conversation',
+                                    conversation_id=notification['conversation_id']
+                                ) }}"
+                                class="notification-view-post notification-open-conversation"
+                            >
+                                Open Conversation
+                            </a>
+
+                        {% endif %}
 
                     </div>
 
@@ -169,6 +207,10 @@
         {% endif %}
 
     </main>
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}"
+    ></script>
 
 </body>
 
