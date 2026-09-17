@@ -134,7 +134,17 @@ button {
 
     text-align: center;
 
-    width: 95px
+    width: auto;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 8px 12px;
+
+    white-space: nowrap;
 
 }
 
@@ -3367,7 +3377,6 @@ body.notifications-page {
 }
 
 .nav-links > a.nav-notifications {
-    width: auto !important;
 
     display: inline-flex !important;
     flex-direction: row !important;
