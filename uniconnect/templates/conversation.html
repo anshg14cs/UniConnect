@@ -95,6 +95,7 @@
 
 
         <form
+            id = "message-form"
             method="post"
             action="{{ url_for('send_message', conversation_id=conversation_id) }}"
             class="conversation-form"
@@ -115,6 +116,8 @@
         </form>
 
     </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 </html>

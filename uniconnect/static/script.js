@@ -290,3 +290,26 @@ if (
     );
 
 }
+
+function scrollConversationToBottom() {
+
+    const messageForm =
+        document.querySelector(
+            "#message-form"
+        );
+
+    if (messageForm) {
+
+        messageForm.scrollIntoView({
+            block: "end"
+        });
+
+    }
+
+}
+
+
+window.addEventListener(
+    "pageshow",
+    scrollConversationToBottom
+);
