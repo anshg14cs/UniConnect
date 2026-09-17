@@ -313,3 +313,185 @@ window.addEventListener(
     "pageshow",
     scrollConversationToBottom
 );
+
+const messageForm =
+    document.querySelector(
+        "#message-form"
+    );
+
+
+if (messageForm) {
+
+    messageForm.addEventListener(
+        "submit",
+        async (event) => {
+
+            event.preventDefault();
+
+
+            const formData =
+                new FormData(messageForm);
+
+
+            const content =
+                String(
+                    formData.get("content") || ""
+                ).trim();
+
+
+            if (!content) {
+                return;
+            }
+
+
+            /*
+                Remember exactly where the
+                message form currently appears
+                on the screen.
+            */
+
+            const formPositionBefore =
+                messageForm
+                    .getBoundingClientRect()
+                    .top;
+
+
+            const submitButton =
+                messageForm.querySelector(
+                    'button[type="submit"]'
+                );
+
+
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        messageForm.action,
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Could not send message."
+                    );
+
+                }
+
+
+                /*
+                    Flask redirects to the updated
+                    conversation after saving the
+                    message.
+
+                    fetch follows that redirect in
+                    the background without moving
+                    the browser away from this page.
+                */
+
+                const html =
+                    await response.text();
+
+
+                const parser =
+                    new DOMParser();
+
+
+                const updatedPage =
+                    parser.parseFromString(
+                        html,
+                        "text/html"
+                    );
+
+
+                const updatedMessages =
+                    updatedPage.querySelector(
+                        ".conversation-messages"
+                    );
+
+
+                const currentMessages =
+                    document.querySelector(
+                        ".conversation-messages"
+                    );
+
+
+                if (
+                    updatedMessages &&
+                    currentMessages
+                ) {
+
+                    currentMessages.innerHTML =
+                        updatedMessages.innerHTML;
+
+                }
+
+
+                messageForm.reset();
+
+
+                /*
+                    A new message has been added
+                    above the form.
+
+                    Keep the form at exactly the
+                    same visual position.
+                */
+
+                const formPositionAfter =
+                    messageForm
+                        .getBoundingClientRect()
+                        .top;
+
+
+                const scrollDifference =
+                    formPositionAfter -
+                    formPositionBefore;
+
+
+                const previousScrollBehavior =
+                    document.documentElement.style.scrollBehavior;
+
+
+                document.documentElement.style.scrollBehavior =
+                    "auto";
+
+
+                window.scrollBy(
+                    0,
+                    scrollDifference
+                );
+
+
+document.documentElement.style.scrollBehavior =
+    previousScrollBehavior;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Could not send message:",
+                    error
+                );
+
+            } finally {
+
+                if (submitButton) {
+                    submitButton.disabled = false;
+                }
+
+            }
+
+        }
+    );
+
+}

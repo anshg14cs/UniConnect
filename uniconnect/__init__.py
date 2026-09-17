@@ -1582,7 +1582,7 @@ def create_app():
         return redirect(
             url_for(
                 "conversation",
-                conversation_id=conversation_id
+                conversation_id=conversation_id,
             )
         )
 
