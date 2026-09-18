@@ -832,6 +832,45 @@ def create_app():
 
         db = get_db()
 
+        connections = db.execute(
+            """
+            SELECT
+                users.id,
+                users.name
+
+            FROM friend_requests
+
+            JOIN users
+                ON friend_requests.receiver_id = users.id
+
+            WHERE friend_requests.sender_id = ?
+            AND friend_requests.status = 'accepted'
+
+
+            UNION
+
+
+            SELECT
+                users.id,
+                users.name
+
+            FROM friend_requests
+
+            JOIN users
+                ON friend_requests.sender_id = users.id
+
+            WHERE friend_requests.receiver_id = ?
+            AND friend_requests.status = 'accepted'
+
+
+            ORDER BY name
+            """,
+            (
+                g.user["id"],
+                g.user["id"]
+            )
+        ).fetchall()
+
         posts = db.execute(
             """
             SELECT
@@ -947,7 +986,8 @@ def create_app():
         return render_template(
             "feed.html",
             posts=posts,
-            comments_by_post=comments_by_post
+            comments_by_post=comments_by_post,
+            connections = connections
         )
 
     @app.route("/posts/<int:post_id>/like", methods=["POST"])
@@ -1720,6 +1760,215 @@ def create_app():
             "total": total,
             "conversations": conversations
         })
+
+    @app.route(
+    "/posts/<int:post_id>/share/<int:user_id>",
+    methods=["POST"]
+)
+    def share_post(post_id, user_id):
+
+        if g.user is None:
+            return redirect(url_for("login"))
+
+        db = get_db()
+
+
+        # Make sure the post exists
+        post = db.execute(
+            """
+            SELECT *
+            FROM posts
+            WHERE id = ?
+            """,
+            (post_id,)
+        ).fetchone()
+
+        if post is None:
+            abort(404)
+
+
+        # You cannot share a post with yourself
+        if user_id == g.user["id"]:
+            abort(400)
+
+
+        # Make sure the recipient exists
+        recipient = db.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,)
+        ).fetchone()
+
+        if recipient is None:
+            abort(404)
+
+
+        # Make sure the two users are accepted connections
+        friendship = db.execute(
+            """
+            SELECT *
+            FROM friend_requests
+            WHERE status = 'accepted'
+            AND (
+                (
+                    sender_id = ?
+                    AND receiver_id = ?
+                )
+                OR
+                (
+                    sender_id = ?
+                    AND receiver_id = ?
+                )
+            )
+            """,
+            (
+                g.user["id"],
+                user_id,
+                user_id,
+                g.user["id"]
+            )
+        ).fetchone()
+
+        if friendship is None:
+            abort(403)
+
+
+        # Look for an existing one-to-one conversation
+        conversation = db.execute(
+            """
+            SELECT conversations.id
+
+            FROM conversations
+
+            JOIN conversation_members AS member_one
+                ON conversations.id =
+                member_one.conversation_id
+
+            JOIN conversation_members AS member_two
+                ON conversations.id =
+                member_two.conversation_id
+
+            WHERE member_one.user_id = ?
+            AND member_two.user_id = ?
+
+            AND (
+                SELECT COUNT(*)
+                FROM conversation_members
+                WHERE conversation_id =
+                    conversations.id
+            ) = 2
+
+            LIMIT 1
+            """,
+            (
+                g.user["id"],
+                user_id
+            )
+        ).fetchone()
+
+
+        # If they have never messaged before,
+        # create the conversation
+        if conversation is None:
+
+            cursor = db.execute(
+                """
+                INSERT INTO conversations
+                DEFAULT VALUES
+                """
+            )
+
+            conversation_id = cursor.lastrowid
+
+            db.execute(
+                """
+                INSERT INTO conversation_members (
+                    conversation_id,
+                    user_id
+                )
+                VALUES (?, ?)
+                """,
+                (
+                    conversation_id,
+                    g.user["id"]
+                )
+            )
+
+            db.execute(
+                """
+                INSERT INTO conversation_members (
+                    conversation_id,
+                    user_id
+                )
+                VALUES (?, ?)
+                """,
+                (
+                    conversation_id,
+                    user_id
+                )
+            )
+
+        else:
+
+            conversation_id = conversation["id"]
+
+
+        # Insert the shared post as a message
+        cursor = db.execute(
+            """
+            INSERT INTO messages (
+                conversation_id,
+                sender_id,
+                content,
+                shared_post_id
+            )
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                conversation_id,
+                g.user["id"],
+                "",
+                post_id
+            )
+        )
+
+        message_id = cursor.lastrowid
+
+
+        # Generate the normal message notification
+        db.execute(
+            """
+            INSERT INTO notifications (
+                recipient_id,
+                actor_id,
+                type,
+                conversation_id,
+                message_id
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                user_id,
+                g.user["id"],
+                "message",
+                conversation_id,
+                message_id
+            )
+        )
+
+
+        db.commit()
+
+
+        return redirect(
+            url_for(
+                "conversation",
+                conversation_id=conversation_id
+            )
+        )
     return app
 
 

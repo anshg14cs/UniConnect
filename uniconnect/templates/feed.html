@@ -173,6 +173,72 @@
 
                                 </span>
 
+                                <details class="feed-share">
+
+                                    <summary class="feed-share-button">
+
+                                        <svg
+                                            class="feed-share-icon"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M22 2L11 13"></path>
+                                            <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                                        </svg>
+
+                                        <span>Share</span>
+
+                                    </summary>
+
+    
+
+                                    <div class="feed-share-menu">
+
+                                        {% if connections %}
+
+                                            {% for connection in connections %}
+
+                                                <form
+                                                    method="post"
+                                                    action="{{ url_for(
+                                                        'share_post',
+                                                        post_id=post['id'],
+                                                        user_id=connection['id']
+                                                    ) }}"
+                                                >
+                                                    <button
+                                                        type="submit"
+                                                        class="feed-share-user"
+                                                    >
+                                                        <span class="feed-share-avatar">
+                                                            {{ connection["name"][0] | upper }}
+                                                        </span>
+
+                                                        <span class="feed-share-name">
+                                                            {{ connection["name"] }}
+                                                        </span>
+                                                    </button>
+                                                </form>
+
+                                            {% endfor %}
+
+                                        {% else %}
+
+                                            <p class="feed-share-empty">
+                                                You have no connections yet.
+                                            </p>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </details>
+
                             </div>
 
                             <div class="feed-comments">

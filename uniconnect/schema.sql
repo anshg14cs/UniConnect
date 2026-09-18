@@ -68,8 +68,12 @@ CREATE TABLE IF NOT EXISTS posts (
     user_id INTEGER NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    shared_post_id INTEGER,
 
     FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (shared_post_id)
+        REFERENCES posts (id)
+        ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS post_likes (
