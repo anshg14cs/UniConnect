@@ -1443,12 +1443,27 @@ def create_app():
                 messages.content,
                 messages.created_at,
                 messages.sender_id,
-                users.name AS sender_name
+                messages.shared_post_id,
+
+                users.name AS sender_name,
+
+                shared_posts.content AS shared_post_content,
+                shared_posts.created_at AS shared_post_created_at,
+
+                post_author.id AS shared_post_author_id,
+                post_author.name AS shared_post_author_name,
+                post_author.university AS shared_post_author_university
 
             FROM messages
 
             JOIN users
                 ON messages.sender_id = users.id
+
+            LEFT JOIN posts AS shared_posts
+                ON messages.shared_post_id = shared_posts.id
+
+            LEFT JOIN users AS post_author
+                ON shared_posts.user_id = post_author.id
 
             WHERE messages.conversation_id = ?
 

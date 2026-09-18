@@ -63,17 +63,46 @@
                         {% endif %}"
                     >
 
-                        <div class="conversation-message-bubble">
+                        {% if message["shared_post_id"] %}
 
-                            <p>
+                            <a
+                                href="{{ url_for('feed') }}#post-{{ message['shared_post_id'] }}"
+                                class="conversation-shared-post"
+                            >
+
+                                <div class="conversation-shared-post-header">
+
+                                    <strong>
+                                        {{ message["shared_post_author_name"] }}
+                                    </strong>
+
+                                    {% if message["shared_post_author_university"] %}
+                                        <span>
+                                            {{ message["shared_post_author_university"] }}
+                                        </span>
+                                    {% endif %}
+
+                                </div>
+
+
+                                <p class="conversation-shared-post-content">
+                                    {{ message["shared_post_content"] }}
+                                </p>
+
+
+                                <span class="conversation-shared-post-label">
+                                    View post
+                                </span>
+
+                            </a>
+
+                        {% else %}
+
+                            <div class="conversation-message-content">
                                 {{ message["content"] }}
-                            </p>
+                            </div>
 
-                            <span>
-                                {{ message["created_at"] | time_ago }}
-                            </span>
-
-                        </div>
+                        {% endif %}
 
                     </div>
 
