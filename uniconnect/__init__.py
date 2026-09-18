@@ -609,7 +609,11 @@ def create_app():
                 users.university AS actor_university,
 
                 comments.content AS comment_content,
-                messages.content AS message_content
+
+                messages.content AS message_content,
+                messages.shared_post_id,
+
+                shared_posts.content AS shared_post_content
 
             FROM notifications
 
@@ -621,6 +625,9 @@ def create_app():
 
             LEFT JOIN messages
                 ON notifications.message_id = messages.id
+
+            LEFT JOIN posts AS shared_posts
+                ON messages.shared_post_id = shared_posts.id
 
             WHERE notifications.recipient_id = ?
 

@@ -145,10 +145,29 @@
                                     {{ notification["actor_name"] }}
                                 </a>
 
-                                sent you a message.
+                                {% if notification["shared_post_id"] %}
+
+                                    sent you a post.
+
+                                {% else %}
+
+                                    sent you a message.
+
+                                {% endif %}
                             </p>
 
-                            {% if notification["message_content"] %}
+
+                            {% if notification["shared_post_id"] %}
+
+                                {% if notification["shared_post_content"] %}
+
+                                    <p class="notification-comment-preview">
+                                        "{{ notification["shared_post_content"] }}"
+                                    </p>
+
+                                {% endif %}
+
+                            {% elif notification["message_content"] %}
 
                                 <p class="notification-comment-preview">
                                     "{{ notification["message_content"] }}"

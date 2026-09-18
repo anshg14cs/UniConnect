@@ -5194,6 +5194,48 @@ details.feed-share[open] .feed-share-menu {
 
     color: var(--green);
 }
+
+.conversation-shared-post-wrapper {
+    max-width: 70%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.conversation-message-received
+.conversation-shared-post-wrapper {
+    align-items: flex-start;
+}
+
+
+.conversation-message-sent
+.conversation-shared-post-wrapper {
+    align-items: flex-end;
+}
+
+
+.conversation-shared-post {
+    width: 340px;
+    max-width: 100%;
+}
+
+
+.conversation-shared-post-time {
+    font-size: 0.7rem;
+
+    color: var(--text-soft);
+
+    opacity: 0.7;
+}
+
+
+.conversation-message-sent
+.conversation-shared-post-time {
+    text-align: right;
+}
 /* ================================
    RESPONSIVE
 ================================ */
