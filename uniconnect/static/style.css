@@ -1188,16 +1188,8 @@ button {
 }
 
 
-.post-actions {
-
-    display: flex;
-
-    gap: 18px;
-
-    color: var(--text-soft);
-
-    font-size: 12px;
-
+.post-card .feed-post-actions {
+    margin-left: 0;
 }
 
 
