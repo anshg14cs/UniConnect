@@ -653,7 +653,7 @@
                                         </button>
 
                                         <button class="ignore-button">
-                                            Ignore
+                                            Reject
                                         </button>
 
                                     </div>
@@ -686,7 +686,7 @@
                                         </button>
 
                                         <button class="ignore-button">
-                                            Ignore
+                                            Reject
                                         </button>
 
                                     </div>
@@ -776,15 +776,40 @@
                                         Need two more players ⚽
                                     </p>
 
-                                    <div class="post-actions">
+                                    <div class="feed-post-actions">
 
-                                        <span>
-                                            ♡ 14
+                                        <button type="button" class="feed-like-button" aria-label="Like post">
+                                            ♡
+                                        </button>
+
+                                        {% set like_count = 14 %}
+                                        <span class="feed-like-count">
+                                            {{ like_count }} {{ 'Like' if like_count == 1 else 'Likes' }}
                                         </span>
 
-                                        <span>
-                                            6 replies
+                                        {% set comment_count = 6 %}
+                                        <span class="feed-comment-count">
+                                            {{ comment_count }} {{ 'Comment' if comment_count == 1 else 'Comments' }}
                                         </span>
+
+                                        <details class="feed-share">
+                                            <summary class="feed-share-button">
+                                                <svg
+                                                    class="feed-share-icon"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path d="M22 2L11 13"></path>
+                                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                                                </svg>
+                                                <span>Share</span>
+                                            </summary>
+                                        </details>
 
                                     </div>
 
@@ -818,15 +843,40 @@
                                         in the library later?
                                     </p>
 
-                                    <div class="post-actions">
+                                    <div class="feed-post-actions">
 
-                                        <span>
-                                            ♡ 8
+                                        <button type="button" class="feed-like-button" aria-label="Like post">
+                                            ♡
+                                        </button>
+
+                                        {% set like_count = 8 %}
+                                        <span class="feed-like-count">
+                                            {{ like_count }} {{ 'Like' if like_count == 1 else 'Likes' }}
                                         </span>
 
-                                        <span>
-                                            3 replies
+                                        {% set comment_count = 3 %}
+                                        <span class="feed-comment-count">
+                                            {{ comment_count }} {{ 'Comment' if comment_count == 1 else 'Comments' }}
                                         </span>
+
+                                        <details class="feed-share">
+                                            <summary class="feed-share-button">
+                                                <svg
+                                                    class="feed-share-icon"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path d="M22 2L11 13"></path>
+                                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                                                </svg>
+                                                <span>Share</span>
+                                            </summary>
+                                        </details>
 
                                     </div>
 
